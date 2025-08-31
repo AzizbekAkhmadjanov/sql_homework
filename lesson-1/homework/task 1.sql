@@ -52,8 +52,103 @@
 
 
 
+-- 7. Research and explain the different SQL commands: DQL, DML, DDL, DCL, TCL with examples.
+-- SQL commands are classified into five main categories:
+
+-- 1. DQL – Data Query Language
+
+-- Purpose: Retrieve data from the database.
+
+-- Example:
+
+-- SELECT Name, Age FROM Students;
+
+-- 2. DML – Data Manipulation Language
+
+-- Purpose: Manage data inside tables (Insert, Update, Delete).
+
+-- Examples:
+
+-- INSERT INTO Students (StudentID, Name, Age)
+-- VALUES (1, 'Ali', 20);
+
+-- UPDATE Students
+-- SET Age = 21
+-- WHERE StudentID = 1;
+
+-- DELETE FROM Students
+-- WHERE StudentID = 1;
+
+-- 3. DDL – Data Definition Language
+
+-- Purpose: Define and manage database structure (tables, schemas).
+
+-- Examples:
+
+-- CREATE TABLE Courses (
+--     CourseID INT PRIMARY KEY,
+--     CourseName VARCHAR(50)
+-- );
+
+-- ALTER TABLE Students ADD Grade VARCHAR(5);
+
+-- DROP TABLE Courses;
+
+-- 4. DCL – Data Control Language
+
+-- Purpose: Control access to data and permissions.
+
+-- Examples:
+
+-- GRANT SELECT ON Students TO User1;
+-- REVOKE SELECT ON Students FROM User1;
+
+-- 5. TCL – Transaction Control Language
+
+-- Purpose: Manage transactions (commit, rollback, savepoint).
+
+-- Examples:
+
+-- BEGIN TRANSACTION;
+
+-- UPDATE Students SET Age = 22 WHERE StudentID = 2;
+
+-- ROLLBACK;  -- Undo changes
+
+-- COMMIT;    -- Save change
+
+-- 8. Write a query to insert three records into the Students table.
+-- INSERT INTO Students (StudentID, Name, Age)
+-- VALUES 
+-- (1, 'Ali', 20),
+-- (2, 'Dilnoza', 22),
+-- (3, 'Javohir', 19);
 
 
+-- 9. Restore AdventureWorksDW2022.bak file to your server. (write its steps to submit) You can find the database from this link :https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksDW2022.bak
+-- To restore the AdventureWorksDW2022.bak database in SQL Server Management Studio (SSMS), we followed these steps:
+
+-- We copied the AdventureWorksDW2022.bak file into the default SQL Server backup folder:
+
+-- C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup
+
+-- We opened SQL Server Management Studio (SSMS) and connected to our SQL Server instance.
+
+-- In Object Explorer, we right-clicked on Databases and selected Restore Database...
+
+-- In the Restore Database dialog:
+
+-- We chose Device → clicked Browse (...) → Add.
+
+-- We navigated to the backup folder and selected the file AdventureWorksDW2022.bak.
+
+-- In the Destination section, we made sure the database name was set to AdventureWorksDW2022.
+
+-- In the Files tab, we verified that the database and log file paths were correct.
+
+-- We clicked OK to start the restore process.
+
+-- After the restore completed successfully, we expanded the Databases node in Object Explorer and confirmed that AdventureWorksDW2022 appeared in the list.
 
 
 
