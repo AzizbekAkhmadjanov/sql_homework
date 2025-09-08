@@ -4,6 +4,7 @@
 
 /* 🟢 EASY-LEVEL TASKS (10) */
 
+
 /* 1. Define and explain the purpose of BULK INSERT in SQL Server
    BULK INSERT is used to quickly load large amounts of data
    from external files (CSV, TXT, etc.) into a SQL Server table. */
