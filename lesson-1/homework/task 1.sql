@@ -1,12 +1,21 @@
+
+--CREATE DATABASE HOMETASK1;
+
+--------------------------------------------------------------------------------------------------------------------
+--USE HOMETASK1;
+
+--------------------------------------------------------------------------------------------------------------------
+
 -- 1. Define the following terms: data, database, relational database, and table.
 -- Data: Raw facts or figures that by themselves may not have meaning (e.g., numbers, text, dates).
 
 -- Database: An organized collection of data that can be easily accessed, managed, and updated.
 
--- Relational Database: A type of database that stores data in tables (relations), where rows represent records and columns represent attributes. Relationships are defined using keys.
+-- Relational Database: A type of database that stores data in tables (relations), 
+-- where rows represent records and columns represent attributes. Relationships are defined using keys.
 
 -- Table: A structured format within a database that consists of rows (records) and columns (fields/attributes).
-
+----------------------------------------------------------------------------------------------------------------
 
 
 -- 2. List five key features of SQL Server.
@@ -19,7 +28,7 @@
 -- Integration Services – Supports ETL (Extract, Transform, Load) processes.
 
 -- Advanced Analytics & Reporting – Built-in tools like SQL Server Reporting Services (SSRS) and Machine Learning Services.
-
+----------------------------------------------------------------------------------------------------------------
 
 
 
@@ -27,28 +36,37 @@
 -- Windows Authentication – Uses Windows user accounts for secure login (preferred).
 
 -- SQL Server Authentication – Uses SQL Server–specific username and password.
-
+----------------------------------------------------------------------------------------------------------------
 
 
 -- 4. Create a new database in SSMS named SchoolDB.
--- CREATE DATABASE SchoolDB;
--- USE SchoolDB;
+ --CREATE DATABASE SchoolDB;
+ --USE SchoolDB;
+----------------------------------------------------------------------------------------------------------------
 
--- 5. Write and execute a query to create a table called Students with columns: StudentID (INT, PRIMARY KEY), Name (VARCHAR(50)), Age (INT).
+-- 5. Write and execute a query to create a table called Students with columns: 
+-- StudentID (INT, PRIMARY KEY), Name (VARCHAR(50)), Age (INT).
+
 -- CREATE TABLE Students (
 --     StudentID INT PRIMARY KEY,
 --     Name VARCHAR(50),
 --     Age INT
 -- );
+--SELECT * FROM Students;
+----------------------------------------------------------------------------------------------------------------
 
 
 -- 6. Describe the differences between SQL Server, SSMS, and SQL.
--- SQL Server: A Database Management System (DBMS) developed by Microsoft. It is the actual engine that stores, processes, and secures data.
+-- SQL Server: A Database Management System (DBMS) developed by Microsoft. 
+-- It is the actual engine that stores, processes, and secures data.
 
--- SSMS (SQL Server Management Studio): A graphical user interface (GUI) tool to connect, manage, and interact with SQL Server. Provides features like query editor, database design, backup/restore, and monitoring.
+-- SSMS (SQL Server Management Studio): A graphical user interface (GUI) tool to connect, manage,
+-- and interact with SQL Server. Provides features like query editor, database design, backup/restore, and monitoring.
 
--- SQL (Structured Query Language): The language used to interact with relational databases. It is standardized (ANSI SQL), though SQL Server has its own extensions (T-SQL).
+-- SQL (Structured Query Language): The language used to interact with relational databases. 
+-- It is standardized (ANSI SQL), though SQL Server has its own extensions (T-SQL).
 
+----------------------------------------------------------------------------------------------------------------
 
 
 
@@ -61,7 +79,7 @@
 
 -- Example:
 
--- SELECT Name, Age FROM Students;
+ --SELECT Name, Age FROM Students;
 
 -- 2. DML – Data Manipulation Language
 
@@ -69,15 +87,19 @@
 
 -- Examples:
 
--- INSERT INTO Students (StudentID, Name, Age)
--- VALUES (1, 'Ali', 20);
 
--- UPDATE Students
--- SET Age = 21
--- WHERE StudentID = 1;
+--INSERT INTO Students (StudentID, Name, Age)
+--VALUES (1, 'Ali', 20);
+--SELECT * FROM Students;
 
--- DELETE FROM Students
--- WHERE StudentID = 1;
+--UPDATE Students
+--SET Age = 21
+--WHERE StudentID = 1;
+--SELECT * FROM Students;
+
+--DELETE FROM Students
+--WHERE StudentID = 1;
+--SELECT * FROM Students;
 
 -- 3. DDL – Data Definition Language
 
@@ -85,14 +107,21 @@
 
 -- Examples:
 
--- CREATE TABLE Courses (
---     CourseID INT PRIMARY KEY,
---     CourseName VARCHAR(50)
--- );
+--CREATE TABLE Courses (
+--    CourseID INT PRIMARY KEY,
+--    CourseName VARCHAR(50)
+--);
+--SELECT * FROM Courses;
 
--- ALTER TABLE Students ADD Grade VARCHAR(5);
 
--- DROP TABLE Courses;
+--SELECT * FROM Students;
+--ALTER TABLE Students 
+--ADD Grade VARCHAR(5);
+--SELECT * FROM Students;
+
+
+--DROP TABLE Courses;
+
 
 -- 4. DCL – Data Control Language
 
@@ -102,6 +131,7 @@
 
 -- GRANT SELECT ON Students TO User1;
 -- REVOKE SELECT ON Students FROM User1;
+
 
 -- 5. TCL – Transaction Control Language
 
@@ -117,13 +147,17 @@
 
 -- COMMIT;    -- Save change
 
+----------------------------------------------------------------------------------------------------------------
 -- 8. Write a query to insert three records into the Students table.
--- INSERT INTO Students (StudentID, Name, Age)
--- VALUES 
--- (1, 'Ali', 20),
--- (2, 'Dilnoza', 22),
--- (3, 'Javohir', 19);
+--SELECT * FROM Students;
+--INSERT INTO Students (StudentID, Name, Age)
+--VALUES 
+--(1, 'Ali', 20),
+--(2, 'Dilnoza', 22),
+--(3, 'Javohir', 19);
+--SELECT * FROM Students;
 
+----------------------------------------------------------------------------------------------------------------
 
 -- 9. Restore AdventureWorksDW2022.bak file to your server. (write its steps to submit) You can find the database from this link :https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksDW2022.bak
 -- To restore the AdventureWorksDW2022.bak database in SQL Server Management Studio (SSMS), we followed these steps:
@@ -149,10 +183,3 @@
 -- We clicked OK to start the restore process.
 
 -- After the restore completed successfully, we expanded the Databases node in Object Explorer and confirmed that AdventureWorksDW2022 appeared in the list.
-
-
-
-
-
-
-
