@@ -1,0 +1,304 @@
+
+--CREATE DATABASE HOMETASK10
+--GO
+--USE HOMETASK10;
+--------------------------------------------------------------------------------
+--1. Using the Employees and Departments tables, write a query to return the names and salaries of employees whose salary is greater than 50000, along with their department names.
+--SELECT 
+--    e.Name AS EmployeeName,   -- Employee's name
+--    e.Salary,                 -- Employee's salary
+--    d.DepartmentName          -- Department's name
+--FROM Employees e
+--JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID   -- Match employees with their departments
+--WHERE e.Salary > 50000;                  -- Filter employees earning more than 50,000
+
+--------------------------------------------------------------------------------
+--2. Using the Customers and Orders tables, write a query to display customer names and order dates for orders placed in the year 2023.
+--SELECT 
+--    c.FirstName,     -- Customer first name
+--    c.LastName,      -- Customer last name
+--    o.OrderDate      -- Date of the order
+--FROM Customers c
+--JOIN Orders o 
+--    ON c.CustomerID = o.CustomerID          -- Match customers with their orders
+--WHERE YEAR(o.OrderDate) = 2023;             -- Only include orders from year 2023
+
+
+--------------------------------------------------------------------------------
+--3. Using the Employees and Departments tables, write a query to show all employees along with their department names. Include employees who do not belong to any department.
+--SELECT 
+--    e.Name AS EmployeeName,       -- Employee's name
+--    d.DepartmentName              -- Department's name (NULL if no department)
+--FROM Employees e
+--LEFT JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID;   -- Include employees without a department
+
+--------------------------------------------------------------------------------
+--4. Using the Products and Suppliers tables, write a query to list all suppliers and the products they supply. Show suppliers even if they don’t supply any product.
+--SELECT 
+--    s.SupplierName,              -- Supplier's name
+--    p.ProductName                -- Product name (NULL if no product)
+--FROM Suppliers s
+--LEFT JOIN Products p 
+--    ON s.SupplierID = p.SupplierID;   -- Include suppliers without products
+
+--------------------------------------------------------------------------------
+--5. Using the Orders and Payments tables, write a query to return all orders and their corresponding payments. Include orders without payments and payments not linked to any order.
+--SELECT 
+--    o.OrderID,          -- Order ID
+--    o.OrderDate,        -- Order date
+--    p.PaymentDate,      -- Payment date (NULL if no payment)
+--    p.Amount            -- Payment amount (NULL if no order linked)
+--FROM Orders o
+--FULL OUTER JOIN Payments p
+--    ON o.OrderID = p.OrderID;   -- Match payments to orders
+
+--------------------------------------------------------------------------------
+--6.Using the Employees table, write a query to show each employee's name along with the name of their manager.
+--SELECT 
+--    e.Name AS EmployeeName,       -- Employee's name
+--    m.Name AS ManagerName         -- Manager's name (NULL if no manager)
+--FROM Employees e
+--LEFT JOIN Employees m 
+--    ON e.ManagerID = m.EmployeeID;   -- Match employee's ManagerID with manager's EmployeeID
+
+--------------------------------------------------------------------------------
+--7.Using the Students, Courses, and Enrollments tables, write a query to list the names of students who are enrolled in the course named 'Math 101'.
+--SELECT 
+--    s.Name AS StudentName,       -- Student's name
+--    c.CourseName                 -- Course name
+--FROM Enrollments e
+--JOIN Students s 
+--    ON e.StudentID = s.StudentID       -- Link enrollment to student
+--JOIN Courses c 
+--    ON e.CourseID = c.CourseID         -- Link enrollment to course
+--WHERE c.CourseName = 'Math 101';       -- Only include Math 101
+
+--------------------------------------------------------------------------------
+--8. Using the Customers and Orders tables, write a query to find customers who have placed an order with more than 3 items. Return their name and the quantity they ordered.
+--SELECT 
+--    c.FirstName,        -- Customer first name
+--    c.LastName,         -- Customer last name
+--    o.Quantity          -- Quantity of items in the order
+--FROM Customers c
+--JOIN Orders o 
+--    ON c.CustomerID = o.CustomerID      -- Match customers with their orders
+--WHERE o.Quantity > 3;                   -- Only orders with more than 3 items
+
+--------------------------------------------------------------------------------
+--9.Using the Employees and Departments tables, write a query to list employees working in the 'Human Resources' department.
+--SELECT 
+--    e.Name AS EmployeeName,       -- Employee's name
+--    d.DepartmentName              -- Department's name
+--FROM Employees e
+--JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID   -- Match employees with departments
+--WHERE d.DepartmentName = 'Human Resources';   -- Only Human Resources department
+
+--------------------------------------------------------------------------------
+--10. Using the Employees and Departments tables, write a query to return department names that have more than 5 employees.
+--SELECT 
+--    d.DepartmentName,                -- Department's name
+--    COUNT(e.EmployeeID) AS EmployeeCount   -- Number of employees in the department
+--FROM Departments d
+--JOIN Employees e 
+--    ON d.DepartmentID = e.DepartmentID     -- Match employees with departments
+--GROUP BY d.DepartmentName                  -- Group by each department
+--HAVING COUNT(e.EmployeeID) > 5;            -- Only departments with more than 5 employees
+
+--------------------------------------------------------------------------------
+--11.Using the Products and Sales tables, write a query to find products that have never been sold.
+--SELECT 
+--    p.ProductID,          -- Product ID
+--    p.ProductName         -- Product name
+--FROM Products p
+--LEFT JOIN Sales s 
+--    ON p.ProductID = s.ProductID      -- Match products with sales
+--WHERE s.ProductID IS NULL;            -- Keep only products that were never sold
+
+--------------------------------------------------------------------------------
+--12. Using the Customers and Orders tables, write a query to return customer names who have placed at least one order.
+--SELECT 
+--    c.FirstName,                   -- Customer first name
+--    c.LastName,                    -- Customer last name
+--    COUNT(o.OrderID) AS TotalOrders -- Number of orders placed
+--FROM Customers c
+--JOIN Orders o 
+--    ON c.CustomerID = o.CustomerID       -- Match customers with their orders
+--GROUP BY c.FirstName, c.LastName         -- Group by customer
+--HAVING COUNT(o.OrderID) >= 1;            -- Only customers with at least one order
+
+--------------------------------------------------------------------------------
+--13. Using the Employees and Departments tables, write a query to show only those records where both employee and department exist (no NULLs).
+--SELECT 
+--    e.Name AS EmployeeName,      -- Employee's name
+--    d.DepartmentName             -- Department's name
+--FROM Employees e
+--INNER JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID;   -- Only employees with valid departments
+
+--------------------------------------------------------------------------------
+--14. Using the Employees table, write a query to find pairs of employees who report to the same manager.
+--SELECT 
+--    e1.Name AS Employee1,      -- First employee
+--    e2.Name AS Employee2,      -- Second employee
+--    e1.ManagerID               -- Shared manager
+--FROM Employees e1
+--JOIN Employees e2 
+--    ON e1.ManagerID = e2.ManagerID       -- Same manager
+--   AND e1.EmployeeID < e2.EmployeeID;    -- Avoid duplicates and self-pairs
+
+--------------------------------------------------------------------------------
+--15. Using the Orders and Customers tables, write a query to list all orders placed in 2022 along with the customer name.
+--SELECT 
+--    o.OrderID,           -- Order ID
+--    o.OrderDate,         -- Order date
+--    c.FirstName,         -- Customer first name
+--    c.LastName           -- Customer last name
+--FROM Orders o
+--JOIN Customers c 
+--    ON o.CustomerID = c.CustomerID      -- Match orders with customers
+--WHERE YEAR(o.OrderDate) = 2022;         -- Only orders from 2022
+
+--------------------------------------------------------------------------------
+--16. Using the Employees and Departments tables, write a query to return employees from the 'Sales' department whose salary is above 60000.
+--SELECT 
+--    e.Name AS EmployeeName,     -- Employee's name
+--    e.Salary,                   -- Employee's salary
+--    d.DepartmentName            -- Department's name
+--FROM Employees e
+--JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID    -- Match employees with departments
+--WHERE d.DepartmentName = 'Sales'          -- Only Sales department
+--  AND e.Salary > 60000;                   -- Salary above 60,000
+
+--------------------------------------------------------------------------------
+--17. Using the Orders and Payments tables, write a query to return only those orders that have a corresponding payment.
+--SELECT 
+--    o.OrderID,         -- Order ID
+--    o.OrderDate,       -- Order date
+--    p.PaymentDate,     -- Payment date
+--    p.Amount           -- Payment amount
+--FROM Orders o
+--INNER JOIN Payments p 
+--    ON o.OrderID = p.OrderID;   -- Only orders with matching payments
+
+--------------------------------------------------------------------------------
+--18. Using the Products and Orders tables, write a query to find products that were never ordered. 
+--SELECT 
+--    p.ProductID,         -- Product ID
+--    p.ProductName        -- Product name
+--FROM Products p
+--LEFT JOIN Orders o 
+--    ON p.ProductID = o.ProductID     -- Match products with orders
+--WHERE o.ProductID IS NULL;           -- Keep only products that were never ordered
+
+--------------------------------------------------------------------------------
+--19. Using the Employees table, write a query to find employees whose salary is greater than the average salary in their own departments.
+--SELECT 
+--    e.Name AS EmployeeName,   -- Employee's name
+--    e.Salary                  -- Employee's salary
+--FROM Employees e
+--WHERE e.Salary > (
+--    -- Subquery: average salary of the employee's department
+--    SELECT AVG(e2.Salary)
+--    FROM Employees e2
+--    WHERE e2.DepartmentID = e.DepartmentID
+--);
+
+--------------------------------------------------------------------------------
+--20. Using the Orders and Payments tables, write a query to list all orders placed before 2020 that have no corresponding payment.
+--SELECT 
+--    o.OrderID,       -- Order ID
+--    o.OrderDate      -- Order date
+--FROM Orders o
+--LEFT JOIN Payments p 
+--    ON o.OrderID = p.OrderID          -- Match orders with payments
+--WHERE o.OrderDate < '2020-01-01'      -- Orders before 2020
+--  AND p.OrderID IS NULL;              -- Keep only orders without payments
+
+--------------------------------------------------------------------------------
+--21. Using the Products and Categories tables, write a query to return products that do not have a matching category. 
+--SELECT
+--  P.ProductID,
+--  P.ProductName
+--FROM Products AS P
+--LEFT JOIN Categories AS C
+--  ON P.Category = C.CategoryID
+--WHERE
+--  C.CategoryID IS NULL;
+
+--------------------------------------------------------------------------------
+--22. Using the Employees table, write a query to find employees who report to the same manager and earn more than 60000.
+--SELECT 
+--    e1.Name AS Employee1,      -- First employee
+--    e2.Name AS Employee2,      -- Second employee
+--    e1.ManagerID,              -- Shared manager
+--    e1.Salary AS Salary        -- Salary of employee1 (both > 60000)
+--FROM Employees e1
+--JOIN Employees e2 
+--    ON e1.ManagerID = e2.ManagerID        -- Same manager
+--   AND e1.EmployeeID < e2.EmployeeID      -- Avoid duplicates (A,B vs B,A)
+--WHERE e1.Salary > 60000 
+--  AND e2.Salary > 60000;                  -- Both must earn > 60000
+
+--------------------------------------------------------------------------------
+--23. Using the Employees and Departments tables, write a query to return employees who work in departments which name starts with the letter 'M'.
+--SELECT 
+--    e.Name AS EmployeeName,     -- Employee's name
+--    d.DepartmentName            -- Department's name
+--FROM Employees e
+--JOIN Departments d 
+--    ON e.DepartmentID = d.DepartmentID     -- Match employees with departments
+--WHERE d.DepartmentName LIKE 'M%';          -- Department name starts with 'M'
+
+--------------------------------------------------------------------------------
+--24. Using the Products and Sales tables, write a query to list sales where the amount is greater than 500, including product names.
+--SELECT 
+--    s.SaleID,             -- Sale ID
+--    p.ProductName,        -- Product name
+--    s.SaleAmount          -- Sale amount
+--FROM Sales s
+--JOIN Products p 
+--    ON s.ProductID = p.ProductID     -- Match sales with products
+--WHERE s.SaleAmount > 500;            -- Only sales above 500
+
+--------------------------------------------------------------------------------
+--25. Using the Students, Courses, and Enrollments tables, write a query to find students who have not enrolled in the course 'Math 101'.
+--SELECT 
+--    s.StudentID,        -- Student ID
+--    s.Name AS StudentName  -- Student name
+--FROM Students s
+--WHERE s.StudentID NOT IN (
+--    SELECT e.StudentID
+--    FROM Enrollments e
+--    JOIN Courses c 
+--        ON e.CourseID = c.CourseID
+--    WHERE c.CourseName = 'Math 101'   -- Students enrolled in Math 101
+--);
+
+--------------------------------------------------------------------------------
+--26. Using the Orders and Payments tables, write a query to return orders that are missing payment details.
+--SELECT 
+--    o.OrderID,          -- Order ID
+--    o.OrderDate,        -- Order date
+--    p.PaymentID         -- NULL if no payment exists
+--FROM Orders o
+--LEFT JOIN Payments p 
+--    ON o.OrderID = p.OrderID      -- Match orders with payments
+--WHERE p.PaymentID IS NULL;        -- Keep only orders without payment
+
+--------------------------------------------------------------------------------
+--27. Using the Products and Categories tables, write a query to list products that belong to either the 'Electronics' or 'Furniture' category.
+--SELECT
+--  P.ProductID,
+--  P.ProductName,
+--  C.CategoryName
+--FROM Products AS P
+--JOIN Categories AS C
+--  ON P.Category = C.CategoryID
+--WHERE
+--  C.CategoryName IN ('Electronics', 'Furniture');
+
+--------------------------------------------------------------------------------
