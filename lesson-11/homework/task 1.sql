@@ -1,0 +1,287 @@
+
+--CREATE DATABASE HOMETASK11
+--GO
+--USE HOMETASK11;
+
+------------------------------------------------------------------------
+--1. Return: OrderID, CustomerName, OrderDate
+--Task: Show all orders placed after 2022 along with the names of the customers who placed them.
+--Tables Used: Orders, Customers
+--SELECT
+--  o.OrderID, -- Selects the unique ID for each order
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Concatenates the customer's first and last name to create a full name
+--  o.OrderDate -- Selects the date the order was placed
+--FROM Orders AS o
+--JOIN Customers AS c
+--  ON o.CustomerID = c.CustomerID -- Links the Orders and Customers tables based on their common CustomerID
+--WHERE
+--  o.OrderDate > '2022-12-31'; -- Filters the results to only include orders placed after December 31, 2022
+
+------------------------------------------------------------------------
+--2. Return: EmployeeName, DepartmentName
+--Task: Display the names of employees who work in either the Sales or Marketing department.
+--Tables Used: Employees, Departments
+--SELECT
+--  e.Name AS EmployeeName, -- Selects the employee's name
+--  d.DepartmentName -- Selects the name of the department
+--FROM Employees AS e
+--JOIN Departments AS d
+--  ON e.DepartmentID = d.DepartmentID -- Joins Employees and Departments tables on their shared DepartmentID
+--WHERE
+--  d.DepartmentName IN ('Sales', 'Marketing'); -- Filters the results to include only employees from 'Sales' or 'Marketing'
+
+------------------------------------------------------------------------
+--3. Return: DepartmentName, MaxSalary
+--Task: Show the highest salary for each department.
+--Tables Used: Departments, Employees
+--SELECT
+--  d.DepartmentName, -- Selects the department's name
+--  MAX(e.Salary) AS MaxSalary -- Calculates the highest salary (MAX) for each department and names it MaxSalary
+--FROM Departments AS d
+--JOIN Employees AS e
+--  ON d.DepartmentID = e.DepartmentID -- Links the Departments and Employees tables on their shared DepartmentID
+--GROUP BY
+--  d.DepartmentName; -- Groups the results by department to calculate the maximum salary for each one
+
+------------------------------------------------------------------------
+--4. Return: CustomerName, OrderID, OrderDate
+--Task: List all customers from the USA who placed orders in the year 2023.
+--Tables Used: Customers, Orders
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the first and last name of the customer
+--  o.OrderID, -- Selects the order's ID
+--  o.OrderDate -- Selects the date the order was placed
+--FROM Customers AS c
+--JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Links customers and orders on their common CustomerID
+--WHERE
+--  c.Country = 'USA' -- Filters for customers located in the USA
+--  AND o.OrderDate >= '2023-01-01' -- Ensures the order date is on or after January 1, 2023
+--  AND o.OrderDate <= '2023-12-31'; -- Ensures the order date is on or before December 31, 2023
+
+------------------------------------------------------------------------
+--5. Return: CustomerName, TotalOrders
+--Task: Show how many orders each customer has placed.
+--Tables Used: Orders , Customers
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the customer's first and last name
+--  COUNT(o.OrderID) AS TotalOrders -- Counts the total number of orders for each customer
+--FROM Customers AS c
+--JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Links the Customers and Orders tables on their common CustomerID
+--GROUP BY
+--  c.CustomerID,
+--  c.FirstName,
+--  c.LastName -- Groups the results by customer to count their total orders
+--ORDER BY
+--  TotalOrders DESC; -- Orders the results to show customers with the most orders first
+
+------------------------------------------------------------------------
+--6. Return: ProductName, SupplierName
+--Task: Display the names of products that are supplied by either Gadget Supplies or Clothing Mart.
+--Tables Used: Products, Suppliers
+--SELECT
+--  p.ProductName, -- Selects the name of the product
+--  s.SupplierName -- Selects the name of the supplier
+--FROM Products AS p
+--JOIN Suppliers AS s
+--  ON p.SupplierID = s.SupplierID -- Joins the Products and Suppliers tables on their common SupplierID
+--WHERE
+--  s.SupplierName IN ('Gadget Supplies', 'Clothing Mart'); -- Filters to show only products from these two specific suppliers
+
+------------------------------------------------------------------------
+--7. Return: CustomerName, MostRecentOrderDate
+--Task: For each customer, show their most recent order. Include customers who haven't placed any orders.
+--Tables Used: Customers, Orders
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the customer's first and last name
+--  MAX(o.OrderDate) AS MostRecentOrderDate -- Finds the most recent order date for each customer
+--FROM Customers AS c
+--LEFT JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Uses a LEFT JOIN to include all customers, even those without a matching order
+--GROUP BY
+--  c.CustomerID,
+--  c.FirstName,
+--  c.LastName; -- Groups the results by customer to ensure we get the most recent order for each
+
+------------------------------------------------------------------------
+--8. Return: CustomerName, OrderTotal
+--Task: Show the customers who have placed an order where the total amount is greater than 500.
+--Tables Used: Orders, Customers
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the customer's first and last name
+--  o.TotalAmount AS OrderTotal -- Selects the total amount of the order
+--FROM Customers AS c
+--JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Links the Customers and Orders tables on their common CustomerID
+--WHERE
+--  o.TotalAmount > 500; -- Filters for orders where the total amount is greater than 500
+
+------------------------------------------------------------------------
+--9. Return: ProductName, SaleDate, SaleAmount
+--Task: List product sales where the sale was made in 2022 or the sale amount exceeded 400.
+--Tables Used: Products, Sales
+--SELECT
+--  p.ProductName, -- Selects the name of the product
+--  s.SaleDate, -- Selects the date of the sale
+--  s.SaleAmount -- Selects the total amount of the sale
+--FROM Products AS p
+--JOIN Sales AS s
+--  ON p.ProductID = s.ProductID -- Links the Products and Sales tables on their common ProductID
+--WHERE
+--  YEAR(s.SaleDate) = 2022 -- Filters for sales that occurred in the year 2022
+--  OR s.SaleAmount > 400; -- Also includes sales where the amount was over 400
+
+------------------------------------------------------------------------
+--10. Return: ProductName, TotalSalesAmount
+--Task: Display each product along with the total amount it has been sold for.
+--Tables Used: Sales, Products
+--SELECT
+--  p.ProductName, -- Selects the name of the product
+--  SUM(s.SaleAmount) AS TotalSalesAmount -- Calculates the total sales amount for each product
+--FROM Products AS p
+--JOIN Sales AS s
+--  ON p.ProductID = s.ProductID -- Joins the Products and Sales tables on their common ProductID
+--GROUP BY
+--  p.ProductName -- Groups the results by product name to aggregate the sales
+--ORDER BY
+--  TotalSalesAmount DESC; -- Orders the results to show the top-selling products first
+
+------------------------------------------------------------------------
+--11. Return: EmployeeName, DepartmentName, Salary
+--Task: Show the employees who work in the HR department and earn a salary greater than 60000.
+--Tables Used: Employees, Departments
+--SELECT
+--  e.Name AS EmployeeName, -- Selects the employee's name
+--  d.DepartmentName, -- Selects the name of the department
+--  e.Salary -- Selects the employee's salary
+--FROM Employees AS e
+--JOIN Departments AS d
+--  ON e.DepartmentID = d.DepartmentID -- Joins the Employees and Departments tables on their common DepartmentID
+--WHERE
+--  d.DepartmentName = 'Human Resources' -- Filters for employees in the 'Human Resources' department
+--  AND e.Salary > 60000; -- Filters for employees with a salary greater than 60000
+
+------------------------------------------------------------------------
+--12. Return: ProductName, SaleDate, StockQuantity
+--Task: List the products that were sold in 2023 and had more than 100 units in stock at the time.
+--Tables Used: Products, Sales
+--SELECT
+--  p.ProductName, -- Selects the name of the product
+--  s.SaleDate, -- Selects the date of the sale
+--  p.StockQuantity -- Selects the number of units in stock
+--FROM Products AS p
+--JOIN Sales AS s
+--  ON p.ProductID = s.ProductID -- Links the Products and Sales tables on their common ProductID
+--WHERE
+--  YEAR(s.SaleDate) = 2023 -- Filters for sales that occurred in the year 2023
+--  AND p.StockQuantity > 100; -- Filters for products with more than 100 units in stock
+
+------------------------------------------------------------------------
+--13. Return: EmployeeName, DepartmentName, HireDate
+--Task: Show employees who either work in the Sales department or were hired after 2020.
+--Tables Used: Employees, Departments
+--SELECT
+--  e.Name AS EmployeeName, -- Selects the employee's name
+--  d.DepartmentName, -- Selects the department's name
+--  e.HireDate -- Selects the employee's hire date
+--FROM Employees AS e
+--JOIN Departments AS d
+--  ON e.DepartmentID = d.DepartmentID -- Joins the Employees and Departments tables
+--WHERE
+--  d.DepartmentName = 'Sales' -- Filters for employees in the 'Sales' department
+--  OR e.HireDate > '2020-12-31'; -- Also includes any employees hired after December 31, 2020
+
+------------------------------------------------------------------------
+--14. Return: CustomerName, OrderID, Address, OrderDate
+--Task: List all orders made by customers in the USA whose address starts with 4 digits.
+--Tables Used: Customers, Orders
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the customer's first and last name
+--  o.OrderID, -- Selects the unique ID for each order
+--  c.Address, -- Selects the customer's address
+--  o.OrderDate -- Selects the date the order was placed
+--FROM Customers AS c
+--JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Links the Customers and Orders tables on their common CustomerID
+--WHERE
+--  c.Country = 'USA' -- Filters for customers in the USA
+--  AND c.Address LIKE '[0-9][0-9][0-9][0-9]%'; -- Filters for addresses that start with exactly four digits
+
+------------------------------------------------------------------------
+--15. Return: ProductName, Category, SaleAmount
+--Task: Display product sales for items in the Electronics category or where the sale amount exceeded 350.
+--Tables Used: Products, Sales
+--SELECT
+--  p.ProductName, -- Selects the name of the product
+--  c.CategoryName AS Category, -- Joins to the Categories table to get the category name
+--  s.SaleAmount -- Selects the sale amount
+--FROM Products AS p
+--JOIN Sales AS s
+--  ON p.ProductID = s.ProductID -- Links products to their sales
+--JOIN Categories AS c
+--  ON p.Category = c.CategoryID -- Links products to their category names
+--WHERE
+--  c.CategoryName = 'Electronics' -- Filters for items in the 'Electronics' category
+--  OR s.SaleAmount > 350; -- Also includes sales where the amount is over $350
+
+------------------------------------------------------------------------
+--16. Return: CategoryName, ProductCount
+--Task: Show the number of products available in each category.
+--Tables Used: Products, Categories
+--SELECT
+--  c.CategoryName, -- Selects the name of the category
+--  COUNT(p.ProductID) AS ProductCount -- Counts the number of products in each category
+--FROM Categories AS c
+--LEFT JOIN Products AS p
+--  ON c.CategoryID = p.Category -- Use LEFT JOIN to include categories with no products
+--GROUP BY
+--  c.CategoryName -- Groups the results by category name to count products for each
+--ORDER BY
+--  c.CategoryName; -- Orders the results alphabetically by category name
+
+
+------------------------------------------------------------------------
+--17. Return: CustomerName, City, OrderID, Amount
+--Task: List orders where the customer is from Los Angeles and the order amount is greater than 300.
+--Tables Used: Customers, Orders
+--SELECT
+--  c.FirstName + ' ' + c.LastName AS CustomerName, -- Combines the customer's first and last name
+--  c.City, -- Selects the customer's city
+--  o.OrderID, -- Selects the unique ID for each order
+--  o.TotalAmount AS Amount -- Selects the total amount of the order
+--FROM Customers AS c
+--JOIN Orders AS o
+--  ON c.CustomerID = o.CustomerID -- Links the Customers and Orders tables on their common CustomerID
+--WHERE
+--  c.City = 'Los Angeles' -- Filters for customers from Los Angeles
+--  AND o.TotalAmount > 300; -- Filters for orders with a total amount greater than 300
+
+------------------------------------------------------------------------
+--18. Return: EmployeeName, DepartmentName
+--Task: Display employees who are in the HR or Finance department, or whose name contains at least 4 vowels.
+--Tables Used: Employees, Departments
+--SELECT
+--  e.Name AS EmployeeName, -- Selects the employee's name
+--  d.DepartmentName -- Selects the name of the department
+--FROM Employees AS e
+--JOIN Departments AS d
+--  ON e.DepartmentID = d.DepartmentID -- Joins the Employees and Departments tables
+--WHERE
+--  d.DepartmentName IN ('Human Resources', 'Finance') -- Filters for employees in HR or Finance departments
+--  OR LEN(e.Name) - LEN(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(e.Name, 'a', ''), 'e', ''), 'i', ''), 'o', ''), 'u', '')) >= 4; -- Filters for names with 4 or more vowels
+
+------------------------------------------------------------------------
+--19. Return: EmployeeName, DepartmentName, Salary
+--Task: Show employees who are in the Sales or Marketing department and have a salary above 60000.
+--Tables Used: Employees, Departments
+--SELECT
+--  e.Name AS EmployeeName, -- Selects the employee's name
+--  d.DepartmentName, -- Selects the department's name
+--  e.Salary -- Selects the employee's salary
+--FROM Employees AS e
+--JOIN Departments AS d
+--  ON e.DepartmentID = d.DepartmentID -- Joins the Employees and Departments tables
+--WHERE
+--  d.DepartmentName IN ('Sales', 'Marketing') -- Filters for employees in either the Sales or Marketing department
+--  AND e.Salary > 60000; -- Further filters for employees who have a salary greater than 60000
