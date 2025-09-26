@@ -1,0 +1,232 @@
+
+--CREATE DATABASE HOMETASK12
+--GO
+--USE HOMETASK12;
+
+------------------------------------------------------------------------------------------------
+--1. Combine Two Tables
+--Create table Person (personId int, firstName varchar(255), lastName varchar(255))
+--Create table Address (addressId int, personId int, city varchar(255), state varchar(255))
+--Truncate table Person
+--insert into Person (personId, lastName, firstName) values ('1', 'Wang', 'Allen')
+--insert into Person (personId, lastName, firstName) values ('2', 'Alice', 'Bob')
+--Truncate table Address
+--insert into Address (addressId, personId, city, state) values ('1', '2', 'New York City', 'New York')
+--insert into Address (addressId, personId, city, state) values ('2', '3', 'Leetcode', 'California')
+-------------------------------------------
+--SELECT
+--    p.firstName,
+--    p.lastName,
+--    a.city,
+--    a.state
+--FROM
+--    Person p
+--LEFT JOIN
+--    Address a
+--ON
+--    p.personId = a.personId;
+
+------------------------------------------------------------------------------------------------
+--2. Employees Earning More Than Their Managers
+--Create table Employee (id int, name varchar(255), salary int, managerId int)
+--Truncate table Employee
+--insert into Employee (id, name, salary, managerId) values ('1', 'Joe', '70000', '3')
+--insert into Employee (id, name, salary, managerId) values ('2', 'Henry', '80000', '4')
+--insert into Employee (id, name, salary, managerId) values ('3', 'Sam', '60000', NULL)
+--insert into Employee (id, name, salary, managerId) values ('4', 'Max', '90000', NULL)
+-------------------------------------------
+--SELECT
+--    e.name AS Employee  -- Alias the employee's name as 'Employee' for the desired output column name
+--FROM
+--    Employee AS e  -- 'e' represents the employee
+--JOIN
+--    Employee AS m ON e.managerId = m.id  -- 'm' represents the manager
+--WHERE
+--    e.salary > m.salary; -- The condition to find employees who earn more than their manager
+
+------------------------------------------------------------------------------------------------
+--3. Duplicate Emails
+--DROP TABLE IF EXISTS Person
+--Create table Person (id int, email varchar(255)) 
+--insert into Person (id, email) values ('1', 'a@b.com') 
+--insert into Person (id, email) values ('2', 'c@d.com') 
+--insert into Person (id, email) values ('3', 'a@b.com')
+
+--SELECT
+--    email
+--FROM
+--    Person
+--GROUP BY
+--    email
+--HAVING
+--    COUNT(email) > 1;
+
+------------------------------------------------------------------------------------------------
+--4. Delete Duplicate Emails
+--DELETE p1
+--FROM Person p1
+--JOIN Person p2
+--ON p1.email = p2.email
+--WHERE p1.id > p2.id;
+
+------------------------------------------------------------------------------------------------
+--5. Find those parents who has only girls.
+--CREATE TABLE boys (
+--    Id INT PRIMARY KEY,
+--    name VARCHAR(100),
+--    ParentName VARCHAR(100)
+--);
+
+--CREATE TABLE girls (
+--    Id INT PRIMARY KEY,
+--    name VARCHAR(100),
+--    ParentName VARCHAR(100)
+--);
+
+--INSERT INTO boys (Id, name, ParentName) 
+--VALUES 
+--(1, 'John', 'Michael'),  
+--(2, 'David', 'James'),   
+--(3, 'Alex', 'Robert'),   
+--(4, 'Luke', 'Michael'),  
+--(5, 'Ethan', 'David'),    
+--(6, 'Mason', 'George');  
+
+
+--INSERT INTO girls (Id, name, ParentName) 
+--VALUES 
+--(1, 'Emma', 'Mike'),  
+--(2, 'Olivia', 'James'),  
+--(3, 'Ava', 'Robert'),    
+--(4, 'Sophia', 'Mike'),  
+--(5, 'Mia', 'John'),      
+--(6, 'Isabella', 'Emily'),
+--(7, 'Charlotte', 'George');
+-------------------------------------------
+--SELECT DISTINCT ParentName
+--FROM girls
+--WHERE ParentName NOT IN (SELECT ParentName FROM boys);
+
+------------------------------------------------------------------------------------------------
+--6. Total over 50 and least
+--SELECT
+--    o.custid AS CustomerID,
+--    SUM(od.unitprice * od.qty) AS TotalSalesAmount,
+--    MIN(o.freight) AS LeastFreightCost
+--FROM
+--    TSQL2012.Sales.Orders AS o
+---- Join with OrderDetails to get individual item prices and quantities
+--JOIN
+--    TSQL2012.Sales.OrderDetails AS od
+--ON
+--    o.orderid = od.orderid
+--WHERE
+--    o.freight > 50
+--GROUP BY
+--    o.custid;
+
+------------------------------------------------------------------------------------------------
+--7. Carts
+--DROP TABLE IF EXISTS Cart1;
+--DROP TABLE IF EXISTS Cart2;
+--GO
+
+--CREATE TABLE Cart1
+--(
+--Item  VARCHAR(100) PRIMARY KEY
+--);
+--GO
+
+--CREATE TABLE Cart2
+--(
+--Item  VARCHAR(100) PRIMARY KEY
+--);
+--GO
+
+--INSERT INTO Cart1 (Item) VALUES
+--('Sugar'),('Bread'),('Juice'),('Soda'),('Flour');
+--GO
+
+--INSERT INTO Cart2 (Item) VALUES
+--('Sugar'),('Bread'),('Butter'),('Cheese'),('Fruit');
+--GO
+-------------------------------------------
+--SELECT
+--    c1.Item AS "Item Cart 1",
+--    c2.Item AS "Item Cart 2"
+--FROM
+--    Cart1 AS c1
+--FULL OUTER JOIN
+--    Cart2 AS c2 ON c1.Item = c2.Item
+--ORDER BY
+--    c1.Item;
+------------------------------------------------------------------------------------------------
+--8. Customers Who Never Order
+--Create table Customers (id int, name varchar(255))
+--Create table Orders (id int, customerId int)
+--Truncate table Customers
+--insert into Customers (id, name) values ('1', 'Joe')
+--insert into Customers (id, name) values ('2', 'Henry')
+--insert into Customers (id, name) values ('3', 'Sam')
+--insert into Customers (id, name) values ('4', 'Max')
+--Truncate table Orders
+--insert into Orders (id, customerId) values ('1', '3')
+--insert into Orders (id, customerId) values ('2', '1')
+-------------------------------------------
+--SELECT
+--    c.name AS Customers
+--FROM
+--    Customers AS c
+--LEFT JOIN
+--    Orders AS o ON c.id = o.customerId
+--WHERE
+--    o.customerId IS NULL;
+
+------------------------------------------------------------------------------------------------
+--9. Students and Examinations
+--Create table Students (student_id int, student_name varchar(20))
+--Create table Subjects (subject_name varchar(20))
+--Create table Examinations (student_id int, subject_name varchar(20))
+--Truncate table Students
+--insert into Students (student_id, student_name) values ('1', 'Alice')
+--insert into Students (student_id, student_name) values ('2', 'Bob')
+--insert into Students (student_id, student_name) values ('13', 'John')
+--insert into Students (student_id, student_name) values ('6', 'Alex')
+--Truncate table Subjects
+--insert into Subjects (subject_name) values ('Math')
+--insert into Subjects (subject_name) values ('Physics')
+--insert into Subjects (subject_name) values ('Programming')
+--Truncate table Examinations
+--insert into Examinations (student_id, subject_name) values ('1', 'Math')
+--insert into Examinations (student_id, subject_name) values ('1', 'Physics')
+--insert into Examinations (student_id, subject_name) values ('1', 'Programming')
+--insert into Examinations (student_id, subject_name) values ('2', 'Programming')
+--insert into Examinations (student_id, subject_name) values ('1', 'Physics')
+--insert into Examinations (student_id, subject_name) values ('1', 'Math')
+--insert into Examinations (student_id, subject_name) values ('13', 'Math')
+--insert into Examinations (student_id, subject_name) values ('13', 'Programming')
+--insert into Examinations (student_id, subject_name) values ('13', 'Physics')
+--insert into Examinations (student_id, subject_name) values ('2', 'Math')
+--insert into Examinations (student_id, subject_name) values ('1', 'Math')
+-------------------------------------------
+--SELECT
+--    s.student_id,
+--    s.student_name,
+--    sub.subject_name,
+--    COUNT(e.student_id) AS attended_exams
+--FROM
+--    Students AS s
+---- CROSS JOIN to get every possible combination of student and subject
+--CROSS JOIN
+--    Subjects AS sub
+---- LEFT JOIN with Examinations to count attended exams for each combination
+--LEFT JOIN
+--    Examinations AS e ON s.student_id = e.student_id AND sub.subject_name = e.subject_name
+--GROUP BY
+--    s.student_id,
+--    s.student_name,
+--    sub.subject_name
+--ORDER BY
+--    s.student_id,
+--    sub.subject_name;
+
