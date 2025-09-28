@@ -1,90 +1,10 @@
---Lesson 7 Homework Tasks
---These homework tasks cover the following topics:
-
---Aggregate Functions (MIN, MAX, COUNT, AVG, SUM)
---Filtering Aggregated Data with HAVING
---Notes before doing the tasks:
-
---Tasks should be solved using SQL Server.
---Case insensitivity applies.
---Alias names do not affect the score.
---Scoring is based on the correct output.
---One correct solution is sufficient.
-
-
 --CREATE DATABASE HOMETASK7;
-
-----------------------------------------------------------------------------------------------------------------
+--GO
 --USE HOMETASK7;
 
-----------------------------------------------------------------------------------------------------------------
-
---🟢 Easy-Level Tasks (10)
---1. Write a query to find the minimum (MIN) price of a product in the Products table.
---DROP TABLE IF EXISTS Products;
-----------------------------------------------------------------------------------------------------------------
---CREATE TABLE Products (
---    ProductID INT PRIMARY KEY,
---    ProductName VARCHAR(100),
---    Price DECIMAL(10, 2),
---    Category VARCHAR(50),
---    StockQuantity INT
---);
---SELECT * FROM Products;
-----------------------------------------------------------------------------------------------------------------
-
-
---INSERT INTO Products VALUES
---(1, 'Laptop', 1200.00, 'Electronics', 30),
---(2, 'Smartphone', 800.00, 'Electronics', 50),
---(3, 'Tablet', 400.00, 'Electronics', 40),
---(4, 'Monitor', 250.00, 'Electronics', 60),
---(5, 'Keyboard', 50.00, 'Accessories', 100),
---(6, 'Mouse', 30.00, 'Accessories', 120),
---(7, 'Chair', 150.00, 'Furniture', 80),
---(8, 'Desk', 200.00, 'Furniture', 75),
---(9, 'Pen', 5.00, 'Stationery', 300),
---(10, 'Notebook', 10.00, 'Stationery', 500),
---(11, 'Printer', 180.00, 'Electronics', 25),
---(12, 'Camera', 500.00, 'Electronics', 40),
---(13, 'Flashlight', 25.00, 'Tools', 200),
---(14, 'Shirt', 30.00, 'Clothing', 150),
---(15, 'Jeans', 45.00, 'Clothing', 120),
---(16, 'Jacket', 80.00, 'Clothing', 70),
---(17, 'Shoes', 60.00, 'Clothing', 100),
---(18, 'Hat', 20.00, 'Accessories', 50),
---(19, 'Socks', 10.00, 'Clothing', 200),
---(20, 'T-Shirt', 25.00, 'Clothing', 150),
---(21, 'Lamp', 60.00, 'Furniture', 40),
---(22, 'Coffee Table', 100.00, 'Furniture', 35),
---(23, 'Book', 15.00, 'Stationery', 250),
---(24, 'Rug', 90.00, 'Furniture', 60),
---(25, 'Cup', 5.00, 'Accessories', 500),
---(26, 'Bag', 25.00, 'Accessories', 300),
---(27, 'Couch', 450.00, 'Furniture', 15),
---(28, 'Fridge', 600.00, 'Electronics', 20),
---(29, 'Stove', 500.00, 'Electronics', 15),
---(30, 'Microwave', 120.00, 'Electronics', 25),
---(31, 'Air Conditioner', 350.00, 'Electronics', 10),
---(32, 'Washing Machine', 450.00, 'Electronics', 15),
---(33, 'Dryer', 400.00, 'Electronics', 10),
---(34, 'Hair Dryer', 30.00, 'Accessories', 100),
---(35, 'Iron', 40.00, 'Electronics', 50),
---(36, 'Coffee Maker', 50.00, 'Electronics', 60),
---(37, 'Blender', 35.00, 'Electronics', 40),
---(38, 'Juicer', 55.00, 'Electronics', 30),
---(39, 'Toaster', 40.00, 'Electronics', 70),
---(40, 'Dishwasher', 500.00, 'Electronics', 20);
---SELECT * FROM Products;
-----------------------------------------------------------------------------------------------------------------
-
---SELECT MIN(Price) AS MinPrice
---FROM Products;
-
-----------------------------------------------------------------------------------------------------------------
---2. Write a query to find the maximum (MAX) Salary from the Employees table.
+-----------------------------------------------------------------------------------
 --DROP TABLE IF EXISTS Employees;
-----------------------------------------------------------------------------------------------------------------
+
 --CREATE TABLE Employees (
 --    EmployeeID INT PRIMARY KEY,
 --    FirstName VARCHAR(50) NULL,
@@ -96,8 +16,6 @@
 --    Email VARCHAR(100) NULL,
 --    Country VARCHAR(50)
 --);
---SELECT * FROM Employees;
-----------------------------------------------------------------------------------------------------------------
 
 --INSERT INTO Employees (EmployeeID, FirstName, LastName, DepartmentName, Salary, HireDate, Age, Email, Country) VALUES
 --(1, 'John', 'Doe', 'IT', 55000.00, '2020-01-01', 30, 'johndoe@example.com', 'USA'),
@@ -140,16 +58,61 @@
 --(38, 'Ronald', NULL, 'IT', 68000.00, '2017-02-04', 39, NULL, 'Germany'),
 --(39, 'Angela', 'Jenkins', 'Finance', 52000.00, '2018-04-23', 34, 'angelaj@example.com', 'Canada'),
 --(40, 'Gary', 'Wright', 'Marketing', 87000.00, '2021-01-10', 29, NULL, 'UK');
---SELECT * FROM Employees;
 
-----------------------------------------------------------------------------------------------------------------
---SELECT MAX(Salary) AS MaxSalary
---FROM Employees;
-
-----------------------------------------------------------------------------------------------------------------
---3. Write a query to count the number of rows in the Customers table.
+--DROP TABLE IF EXISTS Orders;
+--DROP TABLE IF EXISTS Products;
 --DROP TABLE IF EXISTS Customers;
-----------------------------------------------------------------------------------------------------------------
+
+--CREATE TABLE Products (
+--    ProductID INT PRIMARY KEY,
+--    ProductName VARCHAR(100),
+--    Price DECIMAL(10, 2),
+--    Category VARCHAR(50),
+--    StockQuantity INT
+--);
+
+--INSERT INTO Products VALUES
+--(1, 'Laptop', 1200.00, 'Electronics', 30),
+--(2, 'Smartphone', 800.00, 'Electronics', 50),
+--(3, 'Tablet', 400.00, 'Electronics', 40),
+--(4, 'Monitor', 250.00, 'Electronics', 60),
+--(5, 'Keyboard', 50.00, 'Accessories', 100),
+--(6, 'Mouse', 30.00, 'Accessories', 120),
+--(7, 'Chair', 150.00, 'Furniture', 80),
+--(8, 'Desk', 200.00, 'Furniture', 75),
+--(9, 'Pen', 5.00, 'Stationery', 300),
+--(10, 'Notebook', 10.00, 'Stationery', 500),
+--(11, 'Printer', 180.00, 'Electronics', 25),
+--(12, 'Camera', 500.00, 'Electronics', 40),
+--(13, 'Flashlight', 25.00, 'Tools', 200),
+--(14, 'Shirt', 30.00, 'Clothing', 150),
+--(15, 'Jeans', 45.00, 'Clothing', 120),
+--(16, 'Jacket', 80.00, 'Clothing', 70),
+--(17, 'Shoes', 60.00, 'Clothing', 100),
+--(18, 'Hat', 20.00, 'Accessories', 50),
+--(19, 'Socks', 10.00, 'Clothing', 200),
+--(20, 'T-Shirt', 25.00, 'Clothing', 150),
+--(21, 'Lamp', 60.00, 'Furniture', 40),
+--(22, 'Coffee Table', 100.00, 'Furniture', 35),
+--(23, 'Book', 15.00, 'Stationery', 250),
+--(24, 'Rug', 90.00, 'Furniture', 60),
+--(25, 'Cup', 5.00, 'Accessories', 500),
+--(26, 'Bag', 25.00, 'Accessories', 300),
+--(27, 'Couch', 450.00, 'Furniture', 15),
+--(28, 'Fridge', 600.00, 'Electronics', 20),
+--(29, 'Stove', 500.00, 'Electronics', 15),
+--(30, 'Microwave', 120.00, 'Electronics', 25),
+--(31, 'Air Conditioner', 350.00, 'Electronics', 10),
+--(32, 'Washing Machine', 450.00, 'Electronics', 15),
+--(33, 'Dryer', 400.00, 'Electronics', 10),
+--(34, 'Hair Dryer', 30.00, 'Accessories', 100),
+--(35, 'Iron', 40.00, 'Electronics', 50),
+--(36, 'Coffee Maker', 50.00, 'Electronics', 60),
+--(37, 'Blender', 35.00, 'Electronics', 40),
+--(38, 'Juicer', 55.00, 'Electronics', 30),
+--(39, 'Toaster', 40.00, 'Electronics', 70),
+--(40, 'Dishwasher', 500.00, 'Electronics', 20);
+
 --CREATE TABLE Customers (
 --    CustomerID INT PRIMARY KEY,
 --    FirstName VARCHAR(100),
@@ -162,9 +125,6 @@
 --    PostalCode VARCHAR(20),
 --    Country VARCHAR(100)
 --);
---SELECT * FROM Customers;
-
-----------------------------------------------------------------------------------------------------------------
 
 --INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, Address, City, State, PostalCode, Country) VALUES
 --(1, 'John', 'Doe', 'johndoe@gmail.com', '555-1234', '123 Elm St', 'New York', 'NY', '10001', 'USA'),
@@ -207,220 +167,8 @@
 --(38, 'Jasmine', 'Walker', 'jasminew@outlook.com', '555-8901', '2626 Redwood St', 'Lisbon', 'LI', '1100-148', 'Portugal'),
 --(39, 'Kyle', 'Young', 'kyley@hotmail.com', '555-9012', '2727 Willow St', 'Pittsburgh', 'PA', '15201','USA'),
 --(40, 'Liam', 'Harris', 'liamh@live.com', '555-0123', '2828 Birch St', 'Richmond', 'VA', '23220','USA');
---SELECT * FROM Customers;
-
-----------------------------------------------------------------------------------------------------------------
---SELECT COUNT(*) AS TotalCustomers
---FROM Customers;
-
-----------------------------------------------------------------------------------------------------------------
---4. Write a query to count the number of unique product categories from the Products table.
---SELECT COUNT(DISTINCT Category) AS UniqueCategories
---FROM Products;
-
-----------------------------------------------------------------------------------------------------------------
---5. Write a query to find the total sales amount for the product with id 7 in the Sales table.
---DROP TABLE IF EXISTS Sales;
-
-----------------------------------------------------------------------------------------------------------------
---CREATE TABLE Sales (
---    SaleID INT PRIMARY KEY,
---    ProductID INT,
---    CustomerID INT,
---    SaleDate DATE,
---    SaleAmount DECIMAL(10, 2)
---);
---SELECT * FROM Sales;
-
-----------------------------------------------------------------------------------------------------------------
---INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES
---(1, 1, 1, '2023-01-01', 150.00),
---(2, 2, 2, '2023-01-02', 200.00),
---(3, 3, 3, '2023-01-03', 250.00),
---(4, 4, 4, '2023-01-04', 300.00),
---(5, 5, 5, '2023-01-05', 350.00),
---(6, 6, 6, '2023-01-06', 400.00),
---(7, 7, 7, '2023-01-07', 450.00),
---(8, 8, 8, '2023-01-08', 500.00),
---(9, 9, 9, '2023-01-09', 550.00),
---(10, 10, 10, '2023-01-10', 600.00),
---(11, 1, 1, '2023-01-11', 150.00),
---(12, 2, 2, '2023-01-12', 200.00),
---(13, 3, 3, '2023-01-13', 250.00),
---(14, 4, 4, '2023-01-14', 300.00),
---(15, 5, 5, '2023-01-15', 350.00),
---(16, 6, 6, '2023-01-16', 400.00),
---(17, 7, 7, '2023-01-17', 450.00),
---(18, 8, 8, '2023-01-18', 500.00),
---(19, 9, 9, '2023-01-19', 550.00),
---(20, 10, 10, '2023-01-20', 600.00),
---(21, 1, 2, '2023-01-21', 150.00),
---(22, 2, 3, '2023-01-22', 200.00),
---(23, 3, 4, '2023-01-23', 250.00),
---(24, 4, 5, '2023-01-24', 300.00),
---(25, 5, 6, '2023-01-25', 350.00),
---(26, 6, 7, '2023-01-26', 400.00),
---(27, 7, 8, '2023-01-27', 450.00),
---(28, 8, 9, '2023-01-28', 500.00),
---(29, 9, 10, '2023-01-29', 550.00),
---(30, 10, 1, '2023-01-30', 600.00),
---(31, 1, 2, '2023-02-01', 150.00),
---(32, 2, 3, '2023-02-02', 200.00),
---(33, 3, 4, '2023-02-03', 250.00),
---(34, 4, 5, '2023-02-04', 300.00),
---(35, 5, 6, '2023-02-05', 350.00),
---(36, 6, 7, '2023-02-06', 400.00),
---(37, 7, 8, '2023-02-07', 450.00),
---(38, 8, 9, '2023-02-08', 500.00),
---(39, 9, 10, '2023-02-09', 550.00),
---(40, 10, 1, '2023-02-10', 600.00);
---SELECT * FROM Sales;
-
-----------------------------------------------------------------------------------------------------------------
---SELECT SUM(SaleAmount) AS TotalSalesForProduct7
---FROM Sales
---WHERE ProductID = 7;
-
-----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------
---6. Write a query to calculate the average age of employees in the Employees table.
---SELECT AVG(Age) AS AverageAge
---FROM Employees;
 
 
-----------------------------------------------------------------------------------------------------------------
---7. Write a query to count the number of employees in each department.
---SELECT DepartmentName, COUNT(*) AS EmployeeCount
---FROM Employees
---GROUP BY DepartmentName;
-
-----------------------------------------------------------------------------------------------------------------
---8. Write a query to show the minimum and maximum Price of products grouped by Category. Use products table.
---SELECT Category,
---       MIN(Price) AS MinPrice,
---       MAX(Price) AS MaxPrice
---FROM Products
---GROUP BY Category;
-
-----------------------------------------------------------------------------------------------------------------
---9. Write a query to calculate the total sales per Customer in the Sales table.
---SELECT CustomerID,
---       SUM(SaleAmount) AS TotalSales
---FROM Sales
---GROUP BY CustomerID;
-
-----------------------------------------------------------------------------------------------------------------
---10. Write a query to filter departments having more than 5 employees from the Employees table.(DeptID is enough, if you don't have DeptName).
---SELECT DepartmentName,
---       COUNT(*) AS EmployeeCount
---FROM Employees
---GROUP BY DepartmentName
---HAVING COUNT(*) > 5;
-
-----------------------------------------------------------------------------------------------------------------
---🟠 Medium-Level Tasks (9)
---11. Write a query to calculate the total sales and average sales for each product category from the Sales table.
---SELECT p.Category,
---       SUM(s.SaleAmount) AS TotalSales,
---       AVG(s.SaleAmount) AS AverageSales
---FROM Sales s
---JOIN Products p ON s.ProductID = p.ProductID
---GROUP BY p.Category;
-
-
-----------------------------------------------------------------------------------------------------------------
---12. Write a query to count the number of employees from the Department HR.
---SELECT COUNT(*) AS HREmployeeCount
---FROM Employees
---WHERE DepartmentName = 'HR';
-
-----------------------------------------------------------------------------------------------------------------
---13. Write a query that finds the highest and lowest Salary by department in the Employees table.(DeptID is enough, if you don't have DeptName).
---SELECT DepartmentName,
---       MIN(Salary) AS MinSalary,
---       MAX(Salary) AS MaxSalary
---FROM Employees
---GROUP BY DepartmentName;
-
-----------------------------------------------------------------------------------------------------------------
---14. Write a query to calculate the average salary per Department.(DeptID is enough, if you don't have DeptName).
---SELECT DepartmentName,
---       AVG(Salary) AS AverageSalary
---FROM Employees
---GROUP BY DepartmentName;
-
-----------------------------------------------------------------------------------------------------------------
---15. Write a query to show the AVG salary and COUNT(*) of employees working in each department.(DeptID is enough, if you don't have DeptName).
---SELECT DepartmentName,
---       AVG(Salary) AS AverageSalary,
---       COUNT(*) AS EmployeeCount
---FROM Employees
---GROUP BY DepartmentName;
-
-----------------------------------------------------------------------------------------------------------------
---16. Write a query to filter product categories with an average price greater than 400.
---SELECT Category,
---       AVG(Price) AS AveragePrice
---FROM Products
---GROUP BY Category
---HAVING AVG(Price) > 400;
-
-----------------------------------------------------------------------------------------------------------------
---17. Write a query that calculates the total sales for each year in the Sales table.
---SELECT YEAR(SaleDate) AS SaleYear,
---       SUM(SaleAmount) AS TotalSales
---FROM Sales
---GROUP BY YEAR(SaleDate)
---ORDER BY SaleYear;
-
-
-----------------------------------------------------------------------------------------------------------------
---18. Write a query to show the list of customers who placed at least 3 orders.
---SELECT CustomerID,
---       COUNT(*) AS OrderCount
---FROM Sales
---GROUP BY CustomerID
---HAVING COUNT(*) >= 3;
-
-----------------------------------------------------------------------------------------------------------------
---19. Write a query to filter out Departments with average salary expenses greater than 60000.(DeptID is enough, if you don't have DeptName).
---SELECT DepartmentName,
---       AVG(Salary) AS AverageSalary
---FROM Employees
---GROUP BY DepartmentName
---HAVING AVG(Salary) > 60000;
-
-----------------------------------------------------------------------------------------------------------------
---🔴 Hard-Level Tasks (6)
---20. Write a query that shows the average price for each product category, and then filter categories with an average price greater than 150.
---SELECT Category,
---       AVG(Price) AS AveragePrice
---FROM Products
---GROUP BY Category
---HAVING AVG(Price) > 150;
-
-----------------------------------------------------------------------------------------------------------------
---21. Write a query to calculate the total sales for each Customer, then filter the results to include only Customers with total sales over 1500.
---SELECT CustomerID,
---       SUM(SaleAmount) AS TotalSales
---FROM Sales
---GROUP BY CustomerID
---HAVING SUM(SaleAmount) > 1500;
-
-----------------------------------------------------------------------------------------------------------------
---22. Write a query to find the total and average salary of employees in each department, and filter the output to include only departments with an average salary greater than 65000.
---SELECT DepartmentName,
---       SUM(Salary) AS TotalSalary,
---       AVG(Salary) AS AverageSalary
---FROM Employees
---GROUP BY DepartmentName
---HAVING AVG(Salary) > 65000;
-
-----------------------------------------------------------------------------------------------------------------
---23. Write a query to find total amount for the orders which weights more than $50 for each customer along with their least purchases.(least amount might be lower than 50, use tsql2012.sales.orders table,freight col, ask ur assistant to give the TSQL2012 database).
---DROP TABLE IF EXISTS Orders;
-
-----------------------------------------------------------------------------------------------------------------
 --CREATE TABLE Orders (
 --        OrderID INT PRIMARY KEY,
 --        CustomerID INT,
@@ -431,9 +179,8 @@
 --        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
 --        FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 --    );
---SELECT * FROM Orders;
-----------------------------------------------------------------------------------------------------------------
-    -- Insert 40 orders
+
+--    -- Insert 40 orders
 --INSERT INTO Orders VALUES
 --(1, 1, 2, '2023-05-14', 1, 800.00),
 --(2, 1, 3, '2024-09-07', 2, 800.00),
@@ -497,31 +244,356 @@
 
 --(39, 23, 40, '2023-11-26', 3, 120.00),
 --(40, 24, 1, '2024-03-09', 1, 1200.00);
+
+
+--DROP TABLE IF EXISTS Sales;
+
+--CREATE TABLE Sales (
+--    SaleID INT PRIMARY KEY,
+--    ProductID INT,
+--    CustomerID INT,
+--    SaleDate DATE,
+--    SaleAmount DECIMAL(10, 2)
+--);
+
+--INSERT INTO Sales (SaleID, ProductID, CustomerID, SaleDate, SaleAmount) VALUES
+--(1, 1, 1, '2023-01-01', 150.00),
+--(2, 2, 2, '2023-01-02', 200.00),
+--(3, 3, 3, '2023-01-03', 250.00),
+--(4, 4, 4, '2023-01-04', 300.00),
+--(5, 5, 5, '2023-01-05', 350.00),
+--(6, 6, 6, '2023-01-06', 400.00),
+--(7, 7, 7, '2023-01-07', 450.00),
+--(8, 8, 8, '2023-01-08', 500.00),
+--(9, 9, 9, '2023-01-09', 550.00),
+--(10, 10, 10, '2023-01-10', 600.00),
+--(11, 1, 1, '2023-01-11', 150.00),
+--(12, 2, 2, '2023-01-12', 200.00),
+--(13, 3, 3, '2023-01-13', 250.00),
+--(14, 4, 4, '2023-01-14', 300.00),
+--(15, 5, 5, '2023-01-15', 350.00),
+--(16, 6, 6, '2023-01-16', 400.00),
+--(17, 7, 7, '2023-01-17', 450.00),
+--(18, 8, 8, '2023-01-18', 500.00),
+--(19, 9, 9, '2023-01-19', 550.00),
+--(20, 10, 10, '2023-01-20', 600.00),
+--(21, 1, 2, '2023-01-21', 150.00),
+--(22, 2, 3, '2023-01-22', 200.00),
+--(23, 3, 4, '2023-01-23', 250.00),
+--(24, 4, 5, '2023-01-24', 300.00),
+--(25, 5, 6, '2023-01-25', 350.00),
+--(26, 6, 7, '2023-01-26', 400.00),
+--(27, 7, 8, '2023-01-27', 450.00),
+--(28, 8, 9, '2023-01-28', 500.00),
+--(29, 9, 10, '2023-01-29', 550.00),
+--(30, 10, 1, '2023-01-30', 600.00),
+--(31, 1, 2, '2023-02-01', 150.00),
+--(32, 2, 3, '2023-02-02', 200.00),
+--(33, 3, 4, '2023-02-03', 250.00),
+--(34, 4, 5, '2023-02-04', 300.00),
+--(35, 5, 6, '2023-02-05', 350.00),
+--(36, 6, 7, '2023-02-06', 400.00),
+--(37, 7, 8, '2023-02-07', 450.00),
+--(38, 8, 9, '2023-02-08', 500.00),
+--(39, 9, 10, '2023-02-09', 550.00),
+--(40, 10, 1, '2023-02-10', 600.00);
+
+-----------------------------------------------------------------------------------
+--1. Write a query to find the minimum (MIN) price of a product in the Products table.
+
+--SELECT * FROM Products;
+
+-----------------------------------
+--SELECT MIN(Price) MinimumPrice
+--FROM Products;
+
+-----------------------------------------------------------------------------------
+--2. Write a query to find the maximum (MAX) Salary from the Employees table.
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT MAX(Salary) MaximumSalary
+--FROM Employees;
+
+-----------------------------------------------------------------------------------
+--3. Write a query to count the number of rows in the Customers table.
+
+--SELECT * FROM Customers;
+-----------------------------------
+
+--SELECT COUNT (*) FROM Customers;
+
+-----------------------------------------------------------------------------------
+--4. Write a query to count the number of unique product categories from the Products table.
+
+--SELECT * FROM Products;
+
+-----------------------------------
+--SELECT DISTINCT Category FROM Products;
+
+-----------------------------------
+--SELECT COUNT(DISTINCT Category) FROM Products; 
+
+-----------------------------------------------------------------------------------
+--5. Write a query to find the total sales amount for the product with id 7 in the Sales table.
+
+--SELECT * FROM Sales;
+
+-----------------------------------
+--SELECT SUM(SaleAmount) FROM Sales
+--WHERE ProductID= 7;
+
+-----------------------------------------------------------------------------------
+--6. Write a query to calculate the average age of employees in the Employees table.
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT AVG(Age) AS AverageAge
+--FROM Employees;
+
+-----------------------------------------------------------------------------------
+--7. Write a query to count the number of employees in each department.
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName, 
+--		COUNT(DepartmentName)
+--FROM Employees
+--GROUP BY DepartmentName;
+
+-----------------------------------------------------------------------------------
+--8. Write a query to show the minimum and maximum Price of products grouped by Category. 
+--		Use products table.
+
+--SELECT * FROM Products;
+
+--SELECT Category CategoryName,
+--		MIN(Price) MinimumPrice, 
+--		MAX(Price) MaximumPrice
+--FROM Products
+--GROUP BY Category;
+
+-----------------------------------------------------------------------------------
+--9. Write a query to calculate the total sales per Customer in the Sales table.
+
+--SELECT * FROM Sales;
+
+-----------------------------------
+--SELECT CustomerID,
+--		SUM(SaleAmount) TotalSales
+--FROM Sales
+--GROUP BY CustomerID
+
+-----------------------------------------------------------------------------------
+--10. Write a query to filter departments having more than 5 employees from the 
+--		Employees table.(DeptID is enough, if you don't have DeptName).
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName, COUNT(DepartmentName) NumberOfEmployees
+--FROM Employees
+--GROUP BY DepartmentName
+--HAVING COUNT(DepartmentName)>5;
+
+-----------------------------------------------------------------------------------
+--11. Write a query to calculate the total sales and average sales for each product 
+--		category from the Sales table.
+
+--SELECT * FROM Sales;
+
+-----------------------------------
+--SELECT ProductID, 
+--		SUM(SaleAmount) TotalSalesAmount, 
+--		AVG(SaleAmount) AverageSalesAmount
+--FROM Sales
+--GROUP BY ProductID;
+
+-----------------------------------------------------------------------------------
+--12. Write a query to count the number of employees from the Department HR.
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT COUNT(DepartmentName) NumberOfEmployees
+--FROM Employees
+--WHERE DepartmentName= 'HR'
+
+-----------------------------------------------------------------------------------
+--13. Write a query that finds the highest and lowest Salary by department in the 
+--		Employees table.(DeptID is enough, if you don't have DeptName).
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName,
+--		MAX(Salary) HighestSalary,
+--		MIN(Salary) LowestSalary
+--FROM Employees
+--GROUP BY DepartmentName;
+
+-----------------------------------------------------------------------------------
+--14. Write a query to calculate the average salary per Department.(DeptID is enough,
+--		if you don't have DeptName).
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName,
+--		AVG(Salary) AverageSalary
+--FROM Employees
+--GROUP BY DepartmentName;
+
+-----------------------------------------------------------------------------------
+--15. Write a query to show the AVG salary and COUNT(*) of employees working in each
+--		department.(DeptID is enough, if you don't have DeptName).
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName,
+--		AVG(Salary) AverageSalary,
+--		COUNT(DepartmentName) NumberOfEmployees
+--FROM Employees
+--GROUP BY DepartmentName;
+
+-----------------------------------------------------------------------------------
+--16. Write a query to filter product categories with an average price greater than 400.
+
+--SELECT * FROM Products;
+
+-----------------------------------
+--SELECT Category, 
+--		AVG(Price) AveragePrice
+--FROM Products
+--GROUP BY Category
+--HAVING AVG(Price)> 400;
+
+-----------------------------------------------------------------------------------
+--17. Write a query that calculates the total sales for each year in the Sales table.
+
+--SELECT * FROM Sales;
+
+-----------------------------------
+
+--SELECT YEAR(SaleDate) AS YearExtracted
+--FROM Sales;
+
+-----------------------------------
+--SELECT YEAR(SaleDate) AS YearExtracted,
+--		SUM(SaleAmount)
+--FROM Sales
+--GROUP BY YEAR(SaleDate);
+
+-----------------------------------------------------------------------------------
+--18. Write a query to show the list of customers who placed at least 3 orders.
+
+--SELECT * FROM Customers;
 --SELECT * FROM Orders;
 
-----------------------------------------------------------------------------------------------------------------
---SELECT CustomerID,
---       SUM(CASE WHEN TotalAmount > 50 THEN TotalAmount ELSE 0 END) AS TotalAbove50,
---       MIN(TotalAmount) AS LeastPurchase
+-----------------------------------
+--SELECT CustomerID, 
+--		COUNT(CustomerID) NumberOfOrders
 --FROM Orders
---GROUP BY CustomerID;
+--GROUP BY CustomerID
+--HAVING COUNT(CustomerID) >= 3;
 
-----------------------------------------------------------------------------------------------------------------
---24. Write a query that calculates the total sales and counts unique products sold in each month of each year, and then filter the months with at least 2 products sold.(Orders)
+-----------------------------------------------------------------------------------
+--19. Write a query to filter out Departments with average salary expenses greater 
+--		than 60000.(DeptID is enough, if you don't have DeptName).
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName, 
+--		AVG(Salary) AverageSalary
+--FROM Employees
+--GROUP BY DepartmentName
+--HAVING AVG(Salary) > 60000;
+
+-----------------------------------------------------------------------------------
+--20. Write a query that shows the average price for each product category, and then 
+--		filter categories with an average price greater than 150.
+
+--SELECT * FROM Products;
+
+-----------------------------------
+--SELECT Category, 
+--		AVG(Price) AveragePrice
+--FROM Products
+--GROUP BY Category
+--HAVING AVG(Price) > 150;
+
+-----------------------------------------------------------------------------------
+--21. Write a query to calculate the total sales for each Customer, then filter the
+--		results to include only Customers with total sales over 1500.
+
+--SELECT * FROM Customers;
+--SELECT * FROM Sales;
+
+-----------------------------------
+--SELECT CustomerID, 
+--		SUM(SaleAmount) TotalSales
+--FROM Sales
+--GROUP BY CustomerID
+--HAVING SUM(SaleAmount) > 1500;
+
+-----------------------------------------------------------------------------------
+--22. Write a query to find the total and average salary of employees in each department,
+--and filter the output to include only departments with an average salary greater than 65000.
+
+--SELECT * FROM Employees;
+
+-----------------------------------
+--SELECT DepartmentName, 
+--		AVG(Salary) AverageSalary
+--FROM Employees
+--GROUP BY DepartmentName
+--HAVING AVG(Salary) > 65000
+
+-----------------------------------------------------------------------------------
+--23. Write a query to find total amount for the orders which weights more than 50 
+--for each customer along with their least purchases.(least amount might be lower than
+--50, use tsql2012.sales.orders table,freight col, ask ur assistant to give 
+--the TSQL2012 database).
+
+--SELECT * FROM tsql2012.sales.orders;
+
+-----------------------------------
+--SELECT custid,
+--	SUM(CASE WHEN freight>50 THEN freight ELSE 0 END) TotalFreightOver50,
+--	MIN(freight) AS LeastPurchase
+--FROM tsql2012.sales.orders
+--GROUP BY custid
+
+-----------------------------------------------------------------------------------
+--24. Write a query that calculates the total sales and counts unique products sold in 
+--each month of each year, and then filter the months with at least 2 products sold.(Orders)
+
+--SELECT * FROM Orders;
+
+-----------------------------------
 --SELECT YEAR(OrderDate) AS OrderYear,
---       MONTH(OrderDate) AS OrderMonth,
---       SUM(TotalAmount) AS TotalSales,
---       COUNT(DISTINCT ProductID) AS UniqueProductsSold
+--		MONTH(OrderDate) AS OrderMonth,
+--		SUM(TotalAmount) TotalSales,
+--		COUNT(DISTINCT ProductID) NumberOfProducts
 --FROM Orders
 --GROUP BY YEAR(OrderDate), MONTH(OrderDate)
---HAVING COUNT(DISTINCT ProductID) >= 2
---ORDER BY OrderYear, OrderMonth;
+--HAVING COUNT(DISTINCT ProductID) >=2
 
-----------------------------------------------------------------------------------------------------------------
---25. Write a query to find the MIN and MAX order quantity per Year. From orders table. 
---SELECT YEAR(OrderDate) AS OrderYear,
---       MIN(Quantity) AS MinOrderQuantity,
---       MAX(Quantity) AS MaxOrderQuantity
+-----------------------------------------------------------------------------------
+--25. Write a query to find the MIN and MAX order quantity per Year. 
+--	From orders table. 
+
+--SELECT * FROM Orders;
+
+-----------------------------------
+--SELECT YEAR(OrderDate) OrderYear,
+--		MIN(Quantity) MinimumOrderQuantity,
+--		MAX(Quantity) MaximumOrderQuantity
 --FROM Orders
---GROUP BY YEAR(OrderDate)
---ORDER BY OrderYear;
+--GROUP BY YEAR(OrderDate);
+
