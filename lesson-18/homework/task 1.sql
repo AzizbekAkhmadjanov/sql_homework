@@ -67,293 +67,415 @@
 --(21, 1, 1, '2024-04-20');
 
 --------------------------------------------------------------------------------
---1. Create a temporary table named MonthlySales to store the total quantity sold 
---	and total revenue for each product in the current month.
---		Return: ProductID, TotalQuantity, TotalRevenue
+--1. Create a temporary table named MonthlySales to store the total quantity 
+--		sold and total revenue for each product in the current month.
+--Return: ProductID, TotalQuantity, TotalRevenue
 
---DECLARE @CurrentDate DATE = '2025-04-15';
---DECLARE @CurrentMonth INT = MONTH(@CurrentDate);
---DECLARE @CurrentYear INT = YEAR(@CurrentDate);
+--SELECT * FROM Sales;
+--SELECT * FROM Products;
 
+-----------------------------------
+--SELECT ProductID, SUM(Quantity) TotalQuantity
+--FROM Sales
+--WHERE MONTH(SaleDate)= MONTH(GETDATE()) AND YEAR(SaleDate)= YEAR(GETDATE())
+--GROUP BY ProductID
 
----- 1. Create the temporary table structure
---DROP TABLE IF EXISTS #MonthlySales;
+-----------------------------------
+--WITH CTE AS
+--		(
+--		SELECT ProductID, SUM(Quantity) TotalQuantity
+--		FROM Sales
+--		WHERE MONTH(SaleDate)= MONTH(GETDATE()) AND YEAR(SaleDate)= YEAR(GETDATE())
+--		GROUP BY ProductID
+--		)
+--SELECT CTE.*, CTE.TotalQuantity* Products.Price TotalRevenue FROM CTE
+--INNER JOIN Products
+--		ON CTE.ProductID= Products.ProductID
 
---CREATE TABLE #MonthlySales (
---    ProductID INT PRIMARY KEY,
---    TotalQuantity INT NOT NULL,
---    TotalRevenue DECIMAL(18, 2) NOT NULL
---);
+-----------------------------------
+--WITH CTE AS
+--		(
+--		SELECT ProductID, SUM(Quantity) TotalQuantity
+--		FROM Sales
+--		WHERE MONTH(SaleDate)= MONTH(GETDATE()) AND YEAR(SaleDate)= YEAR(GETDATE())
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT CTE.*, CTE.TotalQuantity* Products.Price TotalRevenue FROM CTE
+--		INNER JOIN Products
+--				ON CTE.ProductID= Products.ProductID
+--		)
+--SELECT *
+--INTO #MonthlySales
+--FROM CTE1;
 
-
----- 2. Calculate the aggregated metrics and insert them into the temporary table
---INSERT INTO #MonthlySales (ProductID, TotalQuantity, TotalRevenue)
---SELECT
---    S.ProductID,
---    SUM(S.Quantity) AS TotalQuantity,
---    SUM(S.Quantity * P.Price) AS TotalRevenue
---FROM
---    Sales S
---INNER JOIN
---    Products P ON S.ProductID = P.ProductID
---WHERE
---    -- Filter sales to include only those within the current year and current month
---    YEAR(S.SaleDate) = @CurrentYear
---    AND MONTH(S.SaleDate) = @CurrentMonth
---GROUP BY
---    S.ProductID;
-
-
----- 3. Return the contents of the temporary table as the final result
---SELECT
---    ProductID,
---    TotalQuantity,
---    TotalRevenue
---FROM
---    #MonthlySales
---ORDER BY
---    ProductID;
+--SELECT * FROM #MonthlySales;
 
 --------------------------------------------------------------------------------
-----2. Create a view named vw_ProductSalesSummary that returns product info along 
-----		with total sales quantity across all time.
+--2. Create a view named vw_ProductSalesSummary that returns product info along 
+--		with total sales quantity across all time.
+--Return: ProductID, ProductName, Category, TotalQuantitySold
 
----- Use IF EXISTS and DROP VIEW for clean execution in multiple environments
---IF OBJECT_ID('vw_ProductSalesSummary', 'V') IS NOT NULL
---    DROP VIEW vw_ProductSalesSummary;
---GO
 
---CREATE VIEW vw_ProductSalesSummary AS
---SELECT
---    P.ProductID,
---    P.ProductName,
---    P.Category,
---    -- P.Price has been removed as requested
---    -- Use LEFT JOIN and COALESCE to ensure all products are listed,
---    -- even those with zero sales, showing TotalQuantitySold as 0.
---    COALESCE(SUM(S.Quantity), 0) AS TotalQuantitySold
---FROM
---    Products P
---LEFT JOIN
---    Sales S ON P.ProductID = S.ProductID
---GROUP BY
---    P.ProductID,
---    P.ProductName,
---    P.Category
---    -- P.Price has been removed from GROUP BY as well
---;
---GO
+--SELECT * FROM Sales;
+--SELECT * FROM Products;
 
----- Optional: Select from the newly created view to demonstrate its contents
+-----------------------------------
+--SELECT ProductID, SUM(Quantity) [total sales quantity]
+--FROM Sales
+--GROUP BY ProductID
+
+-----------------------------------
+--WITH CTE AS
+--		(
+--		SELECT ProductID, SUM(Quantity) [total sales quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT p.ProductID, 
+--				p.ProductName,
+--				p.Category,
+--				ISNULL(CTE.[total sales quantity], 0) [total sales quantity]
+--		FROM Products p
+--		LEFT JOIN CTE
+--				ON CTE.ProductID= p.ProductID
+--		)
+--SELECT * FROM CTE1;
+
+-----------------------------------
+--CREATE VIEW vw_ProductSalesSummary
+--AS
+--WITH CTE AS
+--		(
+--		SELECT ProductID, SUM(Quantity) [total sales quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT p.ProductID, 
+--				p.ProductName,
+--				p.Category,
+--				ISNULL(CTE.[total sales quantity], 0) [total sales quantity]
+--		FROM Products p
+--		LEFT JOIN CTE
+--				ON CTE.ProductID= p.ProductID
+--		)
+--SELECT * FROM CTE1;
+
+-----------------------------------
 --SELECT * FROM vw_ProductSalesSummary;
+
 --------------------------------------------------------------------------------
 --3. Create a function named fn_GetTotalRevenueForProduct(@ProductID INT)
---Return: total revenue for the given product ID
+--		Return: total revenue for the given product ID
 
---IF OBJECT_ID('fn_GetTotalRevenueForProduct', 'FN') IS NOT NULL
---    DROP FUNCTION fn_GetTotalRevenueForProduct;
---GO
+--SELECT * FROM Sales;
+--SELECT * FROM Products;
 
+-----------------------------------
+--DECLARE @ProductID INT= 1;
+--WITH CTE AS 
+--		(
+--		SELECT ProductID, SUM(Quantity) [total quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT p.ProductID,
+--				ISNULL(p.Price*[total quantity], 0) [total revenue]
+--		FROM Products p 
+--		LEFT JOIN CTE
+--				ON p.ProductID= CTE.ProductID
+--		)
+--SELECT [total revenue] FROM CTE1
+--WHERE ProductID= @ProductID;
+
+-----------------------------------
 --CREATE FUNCTION fn_GetTotalRevenueForProduct(@ProductID INT)
---RETURNS DECIMAL(18, 2)
+--RETURNS TABLE
 --AS
---BEGIN
---    DECLARE @TotalRevenue DECIMAL(18, 2);
+--RETURN
+--		(
+--		WITH CTE AS 
+--				(
+--				SELECT ProductID, SUM(Quantity) [total quantity]
+--				FROM Sales
+--				GROUP BY ProductID
+--				),
+--		CTE1 AS
+--				(
+--				SELECT p.ProductID,
+--						ISNULL(p.Price*[total quantity], 0) [total revenue]
+--				FROM Products p 
+--				LEFT JOIN CTE
+--						ON p.ProductID= CTE.ProductID
+--				)
+--		SELECT [total revenue] FROM CTE1
+--		WHERE ProductID= @ProductID
+--		)
 
---    -- Calculate total revenue across all sales history for the given ProductID
---    SELECT
---        @TotalRevenue = COALESCE(SUM(S.Quantity * P.Price), 0.00)
---    FROM
---        Sales S
---    INNER JOIN
---        Products P ON S.ProductID = P.ProductID
---    WHERE
---        S.ProductID = @ProductID;
-
---    RETURN @TotalRevenue;
---END;
---GO
-
----- Optional: Test the new function for ProductID 1 (Samsung Galaxy S23) and ProductID 7 (Alpen Cereal)
---SELECT
---    'Test Product 1' AS Description,
---    dbo.fn_GetTotalRevenueForProduct(1) AS TotalRevenue
---UNION ALL
---SELECT
---    'Test Product 7' AS Description,
---    dbo.fn_GetTotalRevenueForProduct(7) AS TotalRevenue;
+-----------------------------------
+--SELECT * FROM dbo.fn_GetTotalRevenueForProduct(1);
+--SELECT * FROM dbo.fn_GetTotalRevenueForProduct(4);
+--SELECT * FROM dbo.fn_GetTotalRevenueForProduct(10);
 
 --------------------------------------------------------------------------------
 --4. Create an function fn_GetSalesByCategory(@Category VARCHAR(50))
 --Return: ProductName, TotalQuantity, TotalRevenue for all products in that category.
 
---IF OBJECT_ID('fn_GetSalesByCategory', 'IF') IS NOT NULL
---    DROP FUNCTION fn_GetSalesByCategory;
---GO
+-----------------------------------
+--SELECT * FROM Sales;
+--SELECT * FROM Products;
 
---CREATE FUNCTION fn_GetSalesByCategory(@Category VARCHAR(50))
+-----------------------------------
+--DECLARE @Category VARCHAR(50)= 'Electronics'
+
+--SELECT p.ProductName, 
+--		ISNULL(SUM(s.Quantity), 0) TotalQuantity,
+--		ISNULL(SUM(s.Quantity * p.Price), 0) TotalRevenue
+--FROM Products p
+--INNER JOIN Sales s
+--		ON p.ProductID= s.ProductID
+--WHERE p.Category= @Category
+--GROUP BY p.ProductID, p.ProductName
+
+-----------------------------------
+--WITH CTE AS
+--		(
+--		SELECT ProductID, 
+--		SUM(Quantity) [total quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		)
+--SELECT * FROM CTE;
+
+-----------------------------------
+--WITH CTE AS
+--		(
+--		SELECT ProductID, 
+--		SUM(Quantity) [total quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT p.*, CTE.[total quantity]
+--		FROM Products p
+--		LEFT JOIN CTE
+--				ON p.ProductID= CTE.ProductID
+--		)
+--SELECT * FROM CTE1;
+
+-----------------------------------
+--DECLARE @Category VARCHAR(50)= 'Electronics';
+
+--WITH CTE AS
+--		(
+--		SELECT ProductID, 
+--		SUM(Quantity) [total quantity]
+--		FROM Sales
+--		GROUP BY ProductID
+--		),
+--CTE1 AS
+--		(
+--		SELECT p.*, CTE.[total quantity]
+--		FROM Products p
+--		LEFT JOIN CTE
+--				ON p.ProductID= CTE.ProductID
+--		)
+--SELECT ProductName,
+--		ISNULL(SUM([total quantity]), 0) TotalQuantity,
+--		ISNULL(SUM(Price * [total quantity]), 0) TotalRevenue
+--FROM CTE1
+--WHERE Category= @Category
+--GROUP BY ProductID, ProductName;
+
+--------------------------------------------------------------------------------
+--5. You have to create a function that get one argument as input from user and 
+--	the function should return 'Yes' if the input number is a prime number and 
+--		'No' otherwise. You can start it like this:
+
+--DECLARE @input INT =8
+--SELECT @input;
+
+-----------------------------------
+--DECLARE @input INT =8
+--SELECT @input AS input, 1 AS divisor, 0 AS remainder
+
+-----------------------------------
+--DECLARE @input INT =8;
+--WITH CTE AS
+--			(
+--			SELECT @input AS input, 1 AS divisor, 0 AS remainder
+--			UNION ALL
+--			SELECT @input, divisor+1, @input%(divisor+1) FROM CTE
+--			WHERE divisor < @input
+--			)
+--SELECT * FROM CTE;
+
+-----------------------------------
+--DECLARE @input INT =8;
+--WITH CTE AS
+--			(
+--			SELECT @input AS input, 1 AS divisor, 1 AS [statement]
+--			UNION ALL
+--			SELECT @input, divisor+1, IIF(@input%(divisor+1)!=0, 0, 1) FROM CTE
+--			WHERE divisor < @input
+--			)
+--SELECT * FROM CTE;
+
+-----------------------------------
+--DECLARE @input INT =4;
+--WITH CTE AS
+--			(
+--			SELECT @input AS input, 1 AS divisor, 1 AS [statement]
+--			UNION ALL
+--			SELECT @input, divisor+1, IIF(@input%(divisor+1)!=0, 0, 1) FROM CTE
+--			WHERE divisor < @input
+--			)
+--SELECT IIF(SUM([statement])=2, 'Yes', 'No') [output] FROM CTE
+--GROUP BY input;
+
+-----------------------------------
+--DROP FUNCTION IF EXISTS dbo.fn_IsPrime;
+
+-----------------------------------
+--CREATE FUNCTION fn_IsPrime(@input INT)
 --RETURNS TABLE
 --AS
 --RETURN
 --(
---    -- Select the required fields by joining Products and Sales
---    SELECT
---        P.ProductName,
---        -- TotalQuantity: Sum of sales quantity, 0 if no sales (due to LEFT JOIN)
---        COALESCE(SUM(S.Quantity), 0) AS TotalQuantity,
---        -- TotalRevenue: Sum of Quantity * Price, 0.00 if no sales
---        COALESCE(SUM(S.Quantity * P.Price), 0.00) AS TotalRevenue
---    FROM
---        Products P
---    LEFT JOIN
---        Sales S ON P.ProductID = S.ProductID
---    WHERE
---        P.Category = @Category -- Filter by the input category parameter
---    GROUP BY
---        P.ProductName -- Group by product name to aggregate sales
+--		WITH CTE AS
+--					(
+--					SELECT @input AS input, 1 AS divisor, 1 AS [statement]
+--					UNION ALL
+--					SELECT @input, divisor+1, IIF(@input%(divisor+1)!=0, 0, 1) FROM CTE
+--					WHERE divisor < @input
+--					)
+--		SELECT IIF(SUM([statement])=2, 'Yes', 'No') [output] FROM CTE
+--		GROUP BY input
 --);
---GO
 
----- Optional: Test the new function for the 'Electronics' category
---SELECT * FROM dbo.fn_GetSalesByCategory('Electronics');
+-----------------------------------
+--SELECT * FROM fn_IsPrime(13);
+--SELECT * FROM fn_IsPrime(72);
+--SELECT * FROM fn_IsPrime(19);
+--SELECT * FROM fn_IsPrime(21);
+--SELECT * FROM fn_IsPrime(35);
+--SELECT * FROM fn_IsPrime(90);
 
 --------------------------------------------------------------------------------
---5.
---CREATE FUNCTION dbo.fn_IsPrime (@Number INT)
---RETURNS VARCHAR(3)
+--6. Create a table-valued function named fn_GetNumbersBetween that accepts 
+--		two integers as input: @Start INT @End INT
+
+
+--DROP FUNCTION IF EXISTS dbo.fn_GetNumbersBetween;
+
+-----------------------------------
+--DECLARE @Start INT= 11, 
+--		@End INT= 24;
+--WITH CTE AS
+--		(
+--		SELECT @Start AS Number
+--		UNION ALL
+--		SELECT Number+1 FROM CTE
+--		WHERE Number<@End
+--		)
+--SELECT * FROM CTE;
+
+-----------------------------------
+--CREATE FUNCTION fn_GetNumbersBetween(@Start INT, @End INT)
+--RETURNS TABLE
 --AS
+--RETURN
+--	(
+--	WITH CTE AS
+--			(
+--			SELECT @Start AS Number
+--			UNION ALL
+--			SELECT Number+1 FROM CTE
+--			WHERE Number<@End
+--			)
+--	SELECT * FROM CTE
+--	);
+
+-----------------------------------
+--SELECT * FROM fn_GetNumbersBetween(7, 19);
+--SELECT * FROM fn_GetNumbersBetween(3, 24);
+--SELECT * FROM fn_GetNumbersBetween(15, 42);
+
+--------------------------------------------------------------------------------
+--7. Write a SQL query to return the Nth highest distinct salary from the Employee
+--		table. If there are fewer than N distinct salaries, return NULL.
+
+-----------------------------------
+--DROP TABLE IF EXISTS Employee;
+
+-----------------------------------
+--CREATE TABLE Employee(id INT PRIMARY KEY, salary INT);
+--INSERT INTO Employee VALUES (1, 100), (2, 200), (3, 300)
+
+--SELECT * FROM Employee
+
+-----------------------------------
+--SELECT COUNT(DISTINCT salary) distinct_data FROM Employee;
+
+-----------------------------------
+--DECLARE @n INT = 2
+
+--IF (SELECT COUNT(DISTINCT salary) distinct_data FROM Employee) >= @n
 --BEGIN
---    -- Lateral-thinking step 1: Handle non-positive or 1 (not prime)
---    IF @Number <= 1
---        RETURN 'No';
-
---    -- Lateral-thinking step 2: Handle 2 (the only even prime)
---    IF @Number = 2
---        RETURN 'Yes';
-
---    -- Lateral-thinking step 3: Handle all other even numbers (not prime)
---    IF @Number % 2 = 0
---        RETURN 'No';
-
---    -- The core logic: Check for divisors from 3 up to sqrt(@Number), 
---    -- only checking odd numbers (since we eliminated all even numbers above).
-
---    -- Declare a variable to iterate as the potential divisor
---    DECLARE @Divisor INT = 3;
---    DECLARE @MaxCheck INT = CAST(SQRT(@Number) AS INT);
-
---    WHILE @Divisor <= @MaxCheck
---    BEGIN
---        IF @Number % @Divisor = 0
---            RETURN 'No'; -- Found a divisor, so it's not prime
-
---        SET @Divisor = @Divisor + 2; -- Only need to check odd numbers
---    END
-
---    -- If the loop completes without finding a divisor, the number is prime.
---    RETURN 'Yes';
+--	SELECT salary [getNthHighestSalary] 
+--	FROM Employee
+--	ORDER BY salary DESC 
+--	OFFSET @n-1 ROWS 
+--	FETCH NEXT 1 ROW ONLY
 --END
+--ELSE
+--BEGIN 
+--	SELECT 'null' AS [getNthHighestSalary]
+--END;
+
+--------------------------------------------------------------------------------
+--8. Write a SQL query to find the person who has the most friends.
+
+-----------------------------------
+--DROP TABLE IF EXISTS RequestAccepted;
+
+-----------------------------------
+--CREATE TABLE RequestAccepted (requester_id INT, accepter_id INT, accept_date DATE);
+
+--INSERT INTO RequestAccepted VALUES (1, 2, '2016-06-03'),
+--									(1, 3, '2016-06-08'),
+--									(2, 3, '2016-06-08'),
+--									(3, 4, '2016-06-09')	
+--SELECT * FROM RequestAccepted;
+
+-----------------------------------
+--WITH CTE AS
+--			(
+--			SELECT requester_id AS allRA FROM RequestAccepted
+--			UNION ALL
+--			SELECT accepter_id FROM RequestAccepted
+--			),
+--CTE1 AS
+--			(
+--			SELECT allRA, COUNT(allRA) connections FROM CTE
+--			GROUP BY allRA
+--			)
+--SELECT TOP 1 allRA id, connections num FROM CTE1
+--ORDER BY connections DESC;
+
+--------------------------------------------------------------------------------
+--9. Create a View for Customer Order Summary.
+
+--DROP TABLE IF EXISTS Customers;
 --GO
-
---SELECT dbo.fn_IsPrime(13) AS Is13Prime; -- Returns 'Yes'
---SELECT dbo.fn_IsPrime(9) AS Is9Prime;   -- Returns 'No'
---SELECT dbo.fn_IsPrime(1) AS Is1Prime;   -- Returns 'No'
---SELECT dbo.fn_IsPrime(101) AS Is101Prime; -- Returns 'Yes'
-
---------------------------------------------------------------------------------
---6
---CREATE FUNCTION dbo.fn_GetNumbersBetween (@Start INT, @End INT)
---RETURNS TABLE
---AS
---RETURN
---(
---    WITH NumberSequence (Number)
---    AS
---    (
---        -- Anchor Member: The starting point of the recursion
---        SELECT @Start
-
---        UNION ALL
-
---        -- Recursive Member: Adds 1 to the previous number
---        -- and continues as long as the new number is less than or equal to @End
---        SELECT Number + 1
---        FROM NumberSequence
---        WHERE Number < @End
---    )
---    -- Final SELECT statement returns the generated sequence
---    SELECT Number
---    FROM NumberSequence
---);
---GO
-
---SELECT
---    N.Number
---FROM
---    dbo.fn_GetNumbersBetween(5, 12) AS N;
---------------------------------------------------------------------------------
---7.
---CREATE FUNCTION getNthHighestSalary (@N INT)
---RETURNS TABLE
---AS
---RETURN
---(
---    WITH RankedSalaries AS
---    (
---        SELECT
---            salary,
---            DENSE_RANK() OVER (ORDER BY salary DESC) as salary_rank
---        FROM
---            Employee
---    )
---    SELECT
---        -- Use MAX(salary) to return a single value, and handle the NULL case
---        MAX(CASE WHEN salary_rank = @N THEN salary ELSE NULL END) AS HighestNSalary
---    FROM
---        RankedSalaries
---);
---GO
-
---------------------------------------------------------------------------------
---8.
---WITH AllFriends AS (
---    -- Get the list of all users who initiated a friendship
---    SELECT
---        requester_id AS user_id
---    FROM
---        RequestAccepted
-
---    UNION ALL
-
---    -- Get the list of all users who accepted a friendship
---    SELECT
---        accepter_id AS user_id
---    FROM
---        RequestAccepted
---),
-
----- 2. Count the total number of times each unique user_id appears in the combined list.
---FriendCounts AS (
---    SELECT
---        user_id,
---        COUNT(user_id) AS num
---    FROM
---        AllFriends
---    GROUP BY
---        user_id
---)
-
----- 3. Find the user with the maximum count using TOP and ORDER BY (T-SQL standard).
---SELECT TOP 1
---    user_id AS id,
---    num
---FROM
---    FriendCounts
----- Use an ordering clause to get the top result.
---ORDER BY
---    num DESC;
---------------------------------------------------------------------------------
---9.
 --CREATE TABLE Customers (
 --    customer_id INT PRIMARY KEY,
 --    name VARCHAR(100),
@@ -383,26 +505,58 @@
 --(104, 2, '2025-01-12', 120.00),
 --(105, 2, '2025-01-20', 180.00);
 
+-----------------------------------
+--SELECT * FROM Customers;
+--SELECT * FROM Orders;
 
---CREATE VIEW vw_CustomerOrderSummary AS
---SELECT
---    C.customer_id,
---    C.name,
---    COUNT(O.order_id) AS total_orders,        -- Counts the number of orders
---    SUM(O.amount) AS total_amount,            -- Sums the total amount spent
---    MAX(O.order_date) AS last_order_date      -- Finds the most recent order date
---FROM
---    Customers C
---INNER JOIN
---    Orders O ON C.customer_id = O.customer_id -- Links customer details to their orders
---GROUP BY
---    C.customer_id,
---    C.name;
---GO
+-----------------------------------
+
+--SELECT * FROM Customers c
+--INNER JOIN Orders o
+--		ON c.customer_id= o.customer_id
+
+
+-----------------------------------
+--CREATE VIEW vw_CustomerOrderSummary
+--AS
+--SELECT c.customer_id,
+--		c.[name],
+--		COUNT(order_id) total_orders,
+--		SUM(amount) total_amount,
+--		MAX(order_date) last_order_date
+--FROM Customers c
+--INNER JOIN Orders o
+--		ON c.customer_id= o.customer_id
+--GROUP BY c.customer_id, c.[name];
 
 --SELECT * FROM vw_CustomerOrderSummary;
+
+-----------------------------------
+--DROP VIEW IF EXISTS vw_CustomerOrderSummary;
+--GO
+--CREATE VIEW vw_CustomerOrderSummary
+--AS
+--SELECT c.customer_id,
+--		c.[name],
+--		COUNT(order_id) total_orders,
+--		ISNULL(SUM(amount), 0.00) total_amount,
+--		ISNULL(CAST(MAX(order_date) AS VARCHAR(50)), '-') last_order_date
+--FROM Customers c
+--LEFT JOIN Orders o
+--		ON c.customer_id= o.customer_id
+--GROUP BY c.customer_id, c.[name];
+
+--SELECT * FROM vw_CustomerOrderSummary;
+
+-----------------------------------
+
+
+-----------------------------------
+
 --------------------------------------------------------------------------------
---10.
+--10. Write an SQL statement to fill in the missing gaps. You have to write only 
+--		select statement, no need to modify the table.
+
 --DROP TABLE IF EXISTS Gaps;
 
 --CREATE TABLE Gaps
@@ -415,21 +569,27 @@
 --(1,'Alpha'),(2,NULL),(3,NULL),(4,NULL),
 --(5,'Bravo'),(6,NULL),(7,NULL),(8,NULL),(9,NULL),(10,'Charlie'), (11, NULL), (12, NULL)
 
---;WITH Grouping AS (
---    SELECT
---        RowNumber,
---        TestCase,
---        MAX(CASE WHEN TestCase IS NOT NULL THEN RowNumber END)
---            OVER (ORDER BY RowNumber ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS GroupStartRow
---    FROM
---        Gaps
---)
+-----------------------------------
+--SELECT * FROM Gaps;
+
+-----------------------------------
 --SELECT
---    G1.RowNumber,
---    G2.TestCase AS Workflow
+--    RowNumber,
+--    -- 2. Use FIRST_VALUE() or MAX() on the original TestCase, 
+--    --    partitioned by the GroupID, to retrieve the non-NULL value.
+--    FIRST_VALUE(TestCase) OVER (
+--        PARTITION BY GroupID 
+--        ORDER BY RowNumber
+--    ) AS TestCase
 --FROM
---    Grouping G1
---INNER JOIN
---    Grouping G2 ON G1.GroupStartRow = G2.RowNumber
---ORDER BY
---    G1.RowNumber;
+--    (
+--        -- 1. Create a GroupID: a running count that only increments 
+--        --    when a non-NULL value (the start of a new group) is encountered.
+--        SELECT
+--            RowNumber,
+--            TestCase,
+--            SUM(CASE WHEN TestCase IS NOT NULL THEN 1 ELSE 0 END) OVER (ORDER BY RowNumber) AS GroupID
+--        FROM
+--            Gaps
+--    ) AS T;
+
